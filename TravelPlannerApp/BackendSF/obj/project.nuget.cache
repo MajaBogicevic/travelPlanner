@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "sCS4Y4T2+qc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\BackendSF\\BackendSF.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric\\12.0.474-beta\\microsoft.servicefabric.12.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.aspnetcore.abstractions\\9.0.474-beta\\microsoft.servicefabric.aspnetcore.abstractions.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.aspnetcore.kestrel\\9.0.474-beta\\microsoft.servicefabric.aspnetcore.kestrel.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data\\9.0.474-beta\\microsoft.servicefabric.data.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.extensions\\9.0.474-beta\\microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.interfaces\\9.0.474-beta\\microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.diagnostics.internal\\9.0.474-beta\\microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services\\9.0.474-beta\\microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.6.2\\swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.23\\microsoft.aspnetcore.app.runtime.win-x64.8.0.23.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.23\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.23.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.23\\microsoft.netcore.app.runtime.win-x64.8.0.23.nupkg.sha512"
+  ],
+  "logs": []
+}
