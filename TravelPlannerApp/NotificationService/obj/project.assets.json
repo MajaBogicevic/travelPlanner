@@ -188,6 +188,46 @@
           }
         }
       },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.McgInterop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.McgInterop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.Interop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
       "Microsoft.ServiceFabric.Services/9.0.474-beta": {
         "type": "package",
         "dependencies": {
@@ -201,6 +241,24 @@
         },
         "runtime": {
           "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.Services": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
             "related": ".xml"
           }
         }
@@ -267,6 +325,19 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta"
+        },
+        "compile": {
+          "bin/placeholder/Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Shared.dll": {}
+        }
       }
     },
     "net8.0/win-x64": {
@@ -400,6 +471,20 @@
           }
         }
       },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        }
+      },
       "Microsoft.ServiceFabric.Services/9.0.474-beta": {
         "type": "package",
         "dependencies": {
@@ -413,6 +498,24 @@
         },
         "runtime": {
           "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.Services": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
             "related": ".xml"
           }
         }
@@ -479,6 +582,19 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta"
+        },
+        "compile": {
+          "bin/placeholder/Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Shared.dll": {}
+        }
       }
     }
   },
@@ -877,6 +993,32 @@
         "microsoft.servicefabric.diagnostics.internal.nuspec"
       ]
     },
+    "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+      "sha512": "WiMMd7pd+c6eT8PfotlmD80ApAZZyIOfIe5SFJhy9WDSQ1+vNz8LgjBrFAoIlhbvzfO1yKCgYbEqWvkrUl5UIg==",
+      "type": "package",
+      "path": "microsoft.servicefabric.fabrictransport.internal/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.V2.xml",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.dll",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll",
+        "microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.fabrictransport.internal.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.McgInterop.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.McgInterop.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll",
+        "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll",
+        "runtimes/linux/lib/net8.0/System.Private.Interop.dll"
+      ]
+    },
     "Microsoft.ServiceFabric.Services/9.0.474-beta": {
       "sha512": "h6JNmWCindinTc9ojHMdydgP22UsPEhTD8OvhC0yGxPfuELX/ZeRZKEuNxW8mcu2sp8Pas8DGw5cQ9kVnhq6eg==",
       "type": "package",
@@ -893,6 +1035,24 @@
         "lib/net8.0/Microsoft.ServiceFabric.Services.xml",
         "microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
         "microsoft.servicefabric.services.nuspec"
+      ]
+    },
+    "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+      "sha512": "Hr0/IhCLDw8YrYJveP1zBCzsJh25AXVht7OOUf+9czVlIKp7UHixzsue4Ce7vfnHulZMlMzJnqDt4dtn4E/1GQ==",
+      "type": "package",
+      "path": "microsoft.servicefabric.services.remoting/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Services.Remoting.dll",
+        "lib/net462/Microsoft.ServiceFabric.Services.Remoting.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.xml",
+        "microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.services.remoting.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.6.2": {
@@ -996,11 +1156,18 @@
         "swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "Shared/1.0.0": {
+      "type": "project",
+      "path": "../Shared/Shared.csproj",
+      "msbuildProject": "../Shared/Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.ServiceFabric.AspNetCore.Kestrel >= 9.0.474-beta",
+      "Microsoft.ServiceFabric.Services.Remoting >= 9.0.474-beta",
+      "Shared >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
@@ -1035,7 +1202,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\Shared\\Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -1055,6 +1226,10 @@
         "targetAlias": "net8.0",
         "dependencies": {
           "Microsoft.ServiceFabric.AspNetCore.Kestrel": {
+            "target": "Package",
+            "version": "[9.0.474-beta, )"
+          },
+          "Microsoft.ServiceFabric.Services.Remoting": {
             "target": "Package",
             "version": "[9.0.474-beta, )"
           },

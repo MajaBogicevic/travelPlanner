@@ -33,20 +33,17 @@ namespace TravelService
                     {
                         var builder = WebApplication.CreateBuilder();
 
-                        var config = ctx.CodePackageActivationContext
-                            .GetConfigurationPackageObject("Config").Settings;
-                        var connStr = config.Sections["ConnectionStrings"]
-                            .Parameters["DefaultConnection"].Value;
-                        var jwtSecret = config.Sections["JwtSettings"]
-                            .Parameters["Secret"].Value;
+                        var config = ctx.CodePackageActivationContext.GetConfigurationPackageObject("Config").Settings;
+                        var connStr = config.Sections["ConnectionStrings"].Parameters["DefaultConnection"].Value;
+                        var jwtSecret = config.Sections["JwtSettings"].Parameters["Secret"].Value;
 
-                        builder.Services.AddDbContext<TravelDbContext>(o =>
-                            o.UseSqlServer(connStr));
+                        builder.Services.AddDbContext<TravelDbContext>(o => o.UseSqlServer(connStr));
                         builder.Services.AddScoped<ITravelPlanService, TravelPlanService>();
                         builder.Services.AddScoped<IDestinationService, DestinationService>();
                         builder.Services.AddScoped<IActivityService, ActivityService>();
                         builder.Services.AddScoped<IExpenseService, ExpenseService>();
                         builder.Services.AddScoped<IChecklistService, ChecklistService>();
+                        builder.Services.AddScoped<IShareService, ShareService>();
                         builder.Services.AddAutoMapper(
                             typeof(TravelPlanProfile),
                             typeof(DestinationProfile),
@@ -54,8 +51,7 @@ namespace TravelService
                             typeof(ExpenseProfile),
                             typeof(ChecklistProfile));
                         builder.Services.AddControllers();
-                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                            .AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
+                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,
                                 IssuerSigningKey = new SymmetricSecurityKey(

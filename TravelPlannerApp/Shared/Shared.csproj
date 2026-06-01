@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="9.0.474-beta" />
+	</ItemGroup>
+
 </Project>

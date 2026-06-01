@@ -1,8 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "Y76o7o6CaeM=",
+  "dgSpecHash": "m/ysxRoke1s=",
   "success": true,
   "projectFilePath": "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\Shared\\Shared.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric\\12.0.474-beta\\microsoft.servicefabric.12.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data\\9.0.474-beta\\microsoft.servicefabric.data.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.extensions\\9.0.474-beta\\microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.interfaces\\9.0.474-beta\\microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.diagnostics.internal\\9.0.474-beta\\microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.fabrictransport.internal\\9.0.474-beta\\microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services\\9.0.474-beta\\microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services.remoting\\9.0.474-beta\\microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512"
+  ],
   "logs": []
 }

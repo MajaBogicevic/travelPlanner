@@ -1,67 +1,67 @@
-using System;
-using System.Collections.Generic;
-using System.Fabric;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
+using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using Microsoft.ServiceFabric.Data;
+using Shared.Events;
+using Shared.Interface;
+using System.Fabric;
 
 namespace NotificationService
 {
     /// <summary>
     /// The FabricRuntime creates an instance of this class for each service type instance.
     /// </summary>
-    internal sealed class NotificationService : StatefulService
+    internal sealed class NotificationService : StatefulService, INotificationService
     {
-        public NotificationService(StatefulServiceContext context)
-            : base(context)
-        { }
+        private const string QueueName = "notification-queue";
+
+        public NotificationService(StatefulServiceContext context) : base(context) { }
+
+        public async Task PublishAsync(TravelPlanEvent planEvent)
+        {
+            var queue = await StateManager
+                .GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
+
+            using var tx = StateManager.CreateTransaction();
+            await queue.EnqueueAsync(tx, planEvent);
+            await tx.CommitAsync();
+        }
 
         /// <summary>
         /// Optional override to create listeners (like tcp, http) for this service instance.
         /// </summary>
         /// <returns>The collection of listeners.</returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
+            => this.CreateServiceRemotingReplicaListeners();
+
+        protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            return new ServiceReplicaListener[]
+            var queue = await StateManager
+                .GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
+
+            while (true)
             {
-                new ServiceReplicaListener(serviceContext =>
-                    new KestrelCommunicationListener(serviceContext, (url, listener) =>
-                    {
-                        ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
+                cancellationToken.ThrowIfCancellationRequested();
 
-                        var builder = WebApplication.CreateBuilder();
+                using var tx = StateManager.CreateTransaction();
+                var result = await queue.TryDequeueAsync(tx, TimeSpan.FromSeconds(5), cancellationToken);
+                if (result.HasValue)
+                {
+                    await ProcessEventAsync(result.Value);
+                    await tx.CommitAsync();
+                }
+                else
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                }
+            }
+        }
 
-                        builder.Services
-                                    .AddSingleton<StatefulServiceContext>(serviceContext)
-                                    .AddSingleton<IReliableStateManager>(this.StateManager);
-                        builder.WebHost
-                                    .UseKestrel()
-                                    .UseContentRoot(Directory.GetCurrentDirectory())
-                                    .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.UseUniqueServiceUrl)
-                                    .UseUrls(url);
-                        builder.Services.AddControllers();
-                        builder.Services.AddEndpointsApiExplorer();
-                        builder.Services.AddSwaggerGen();
-                        var app = builder.Build();
-                        if (app.Environment.IsDevelopment())
-                        {
-                        app.UseSwagger();
-                        app.UseSwaggerUI();
-                        }
-                        app.UseAuthorization();
-                        app.MapControllers();
-                        
-                        return app;
-
-                    }))
-            };
+        private Task ProcessEventAsync(TravelPlanEvent evt)
+        {
+            ServiceEventSource.Current.ServiceMessage(Context,
+                $"[{evt.EventType}] Plan: {evt.PlanName}, User: {evt.UserEmail}, Time: {evt.Timestamp}");
+            return Task.CompletedTask;
         }
     }
 }

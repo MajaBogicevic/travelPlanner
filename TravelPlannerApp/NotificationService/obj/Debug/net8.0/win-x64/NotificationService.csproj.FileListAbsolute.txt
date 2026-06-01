@@ -371,3 +371,8 @@ C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\Notifica
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\obj\Debug\net8.0\win-x64\NotificationService.pdb
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\obj\Debug\net8.0\win-x64\NotificationService.genruntimeconfig.cache
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\obj\Debug\net8.0\win-x64\ref\NotificationService.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\bin\Debug\net8.0\win-x64\Microsoft.ServiceFabric.FabricTransport.V2.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\bin\Debug\net8.0\win-x64\Microsoft.ServiceFabric.FabricTransport.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\bin\Debug\net8.0\win-x64\Microsoft.ServiceFabric.Services.Remoting.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\bin\Debug\net8.0\win-x64\Shared.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\NotificationService\bin\Debug\net8.0\win-x64\Shared.pdb

@@ -10,6 +10,8 @@
       "NotificationService/1.0.0": {
         "dependencies": {
           "Microsoft.ServiceFabric.AspNetCore.Kestrel": "9.0.474-beta",
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta",
+          "Shared": "1.0.0",
           "Swashbuckle.AspNetCore": "6.6.2",
           "runtimepack.Microsoft.NETCore.App.Runtime.win-x64": "8.0.23",
           "runtimepack.Microsoft.AspNetCore.App.Runtime.win-x64": "8.0.23"
@@ -1412,6 +1414,21 @@
           }
         }
       },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+        "dependencies": {
+          "Microsoft.ServiceFabric": "12.0.474-beta"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          },
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          }
+        }
+      },
       "Microsoft.ServiceFabric.Services/9.0.474-beta": {
         "dependencies": {
           "Microsoft.ServiceFabric.Data": "9.0.474-beta",
@@ -1419,6 +1436,19 @@
         },
         "runtime": {
           "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "9.9.0.0"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+        "dependencies": {
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "9.0.474-beta",
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "9.0.474-beta",
+          "Microsoft.ServiceFabric.Services": "9.0.474-beta"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "9.9.0.0"
           }
@@ -1458,6 +1488,17 @@
           "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
             "assemblyVersion": "6.6.2.0",
             "fileVersion": "6.6.2.401"
+          }
+        }
+      },
+      "Shared/1.0.0": {
+        "dependencies": {
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta"
+        },
+        "runtime": {
+          "Shared.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -1535,12 +1576,26 @@
       "path": "microsoft.servicefabric.diagnostics.internal/9.0.474-beta",
       "hashPath": "microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512"
     },
+    "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WiMMd7pd+c6eT8PfotlmD80ApAZZyIOfIe5SFJhy9WDSQ1+vNz8LgjBrFAoIlhbvzfO1yKCgYbEqWvkrUl5UIg==",
+      "path": "microsoft.servicefabric.fabrictransport.internal/9.0.474-beta",
+      "hashPath": "microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512"
+    },
     "Microsoft.ServiceFabric.Services/9.0.474-beta": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-h6JNmWCindinTc9ojHMdydgP22UsPEhTD8OvhC0yGxPfuELX/ZeRZKEuNxW8mcu2sp8Pas8DGw5cQ9kVnhq6eg==",
       "path": "microsoft.servicefabric.services/9.0.474-beta",
       "hashPath": "microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512"
+    },
+    "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Hr0/IhCLDw8YrYJveP1zBCzsJh25AXVht7OOUf+9czVlIKp7UHixzsue4Ce7vfnHulZMlMzJnqDt4dtn4E/1GQ==",
+      "path": "microsoft.servicefabric.services.remoting/9.0.474-beta",
+      "hashPath": "microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.6.2": {
       "type": "package",
@@ -1569,6 +1624,11 @@
       "sha512": "sha512-mBBb+/8Hm2Q3Wygag+hu2jj69tZW5psuv0vMRXY07Wy+Rrj40vRP8ZTbKBhs91r45/HXT4aY4z0iSBYx1h6JvA==",
       "path": "swashbuckle.aspnetcore.swaggerui/6.6.2",
       "hashPath": "swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512"
+    },
+    "Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   },
   "runtimes": {

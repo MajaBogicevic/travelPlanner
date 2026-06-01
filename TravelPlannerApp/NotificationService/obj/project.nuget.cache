@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "SGzDrXGwkqY=",
+  "dgSpecHash": "8GMyYCydQM8=",
   "success": true,
   "projectFilePath": "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\NotificationService\\NotificationService.csproj",
   "expectedPackageFiles": [
@@ -13,7 +13,9 @@
     "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.extensions\\9.0.474-beta\\microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.interfaces\\9.0.474-beta\\microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.diagnostics.internal\\9.0.474-beta\\microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.fabrictransport.internal\\9.0.474-beta\\microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services\\9.0.474-beta\\microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services.remoting\\9.0.474-beta\\microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
     "C:\\Users\\bogic\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",

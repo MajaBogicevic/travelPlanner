@@ -1,11 +1,394 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "Microsoft.ServiceFabric/12.0.474-beta": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Preview.dll": {},
+          "lib/net8.0/StartupServicesModel.dll": {},
+          "lib/net8.0/System.Fabric.Management.ServiceModel.dll": {},
+          "lib/net8.0/System.Fabric.Strings.dll": {},
+          "lib/net8.0/System.Fabric.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Preview.dll": {},
+          "lib/net8.0/StartupServicesModel.dll": {},
+          "lib/net8.0/System.Fabric.Management.ServiceModel.dll": {},
+          "lib/net8.0/System.Fabric.Strings.dll": {},
+          "lib/net8.0/System.Fabric.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Preview.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/StartupServicesModel.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Fabric.Management.ServiceModel.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Fabric.McgInterop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Fabric.Strings.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Fabric.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.Interop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Data/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]",
+          "Microsoft.ServiceFabric.Data.Extensions": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.Data.Interfaces": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Data.Extensions/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "12.0.474-beta",
+          "Microsoft.ServiceFabric.Data.Interfaces": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.Extensions.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.ReliableCollection.Interop.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.Extensions.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.ReliableCollection.Interop.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.Extensions.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.ReliableCollection.Interop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Data.Interfaces/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.Interfaces.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Data.Interfaces.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.Interfaces.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Diagnostics.Internal/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Diagnostics.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Diagnostics.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[12.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {},
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.McgInterop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.McgInterop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          },
+          "runtimes/linux/lib/net8.0/System.Private.Interop.dll": {
+            "assetType": "runtime",
+            "rid": "linux"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Data": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "[9.0.474-beta]",
+          "Microsoft.ServiceFabric.Services": "[9.0.474-beta]"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Microsoft.ServiceFabric/12.0.474-beta": {
+      "sha512": "L3F00DSuUQCnTbLkdGf+2wNuWIh43kQvfa++GBCd9oMlxPdf8cVsCqT6o1NYpk+X6vWB2IM3xY9EqaqxSWdQbg==",
+      "type": "package",
+      "path": "microsoft.servicefabric/12.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Preview.dll",
+        "lib/net462/Microsoft.ServiceFabric.Preview.xml",
+        "lib/net462/StartupServicesModel.XmlSerializers.dll",
+        "lib/net462/StartupServicesModel.dll",
+        "lib/net462/System.Fabric.Management.ServiceModel.XmlSerializers.dll",
+        "lib/net462/System.Fabric.Management.ServiceModel.dll",
+        "lib/net462/System.Fabric.Strings.dll",
+        "lib/net462/System.Fabric.dll",
+        "lib/net462/System.Fabric.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Preview.dll",
+        "lib/net8.0/StartupServicesModel.dll",
+        "lib/net8.0/System.Fabric.Management.ServiceModel.dll",
+        "lib/net8.0/System.Fabric.Strings.dll",
+        "lib/net8.0/System.Fabric.dll",
+        "microsoft.servicefabric.12.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Preview.dll",
+        "runtimes/linux/lib/net8.0/StartupServicesModel.dll",
+        "runtimes/linux/lib/net8.0/System.Fabric.Management.ServiceModel.dll",
+        "runtimes/linux/lib/net8.0/System.Fabric.McgInterop.dll",
+        "runtimes/linux/lib/net8.0/System.Fabric.Strings.dll",
+        "runtimes/linux/lib/net8.0/System.Fabric.dll",
+        "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll",
+        "runtimes/linux/lib/net8.0/System.Private.Interop.dll"
+      ]
+    },
+    "Microsoft.ServiceFabric.Data/9.0.474-beta": {
+      "sha512": "hoaiy+/e1/+b6dleKFiWA/fhGNwTDRr/Ah+vjhHMAe7sfx4N5YfSTSf8y78rFDqPNPi9AH9UPAMDZi3lhRxqNg==",
+      "type": "package",
+      "path": "microsoft.servicefabric.data/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Data.dll",
+        "lib/net462/Microsoft.ServiceFabric.Data.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Data.dll",
+        "microsoft.servicefabric.data.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.data.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.dll"
+      ]
+    },
+    "Microsoft.ServiceFabric.Data.Extensions/9.0.474-beta": {
+      "sha512": "KCiwCvdlG96a+wxrVX9aHO/lWA7QBY3U0F49tDt1n9Tzjo1qOzFWpLojgNIpN7ToRiSv9gMZl22YeB8R6gMZ7w==",
+      "type": "package",
+      "path": "microsoft.servicefabric.data.extensions/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Data.Extensions.dll",
+        "lib/net462/Microsoft.ServiceFabric.Data.Extensions.xml",
+        "lib/net462/Microsoft.ServiceFabric.ReliableCollection.Interop.dll",
+        "lib/net462/Microsoft.ServiceFabric.ReliableCollection.Interop.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Data.Extensions.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.ReliableCollection.Interop.dll",
+        "microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.data.extensions.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.Extensions.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.ReliableCollection.Interop.dll"
+      ]
+    },
+    "Microsoft.ServiceFabric.Data.Interfaces/9.0.474-beta": {
+      "sha512": "0/Hxw35Wbfd1QCiTVTEYYVymJiJ22XgaqYDo//V5C67luWTNfkoi17qCCd3XFCek5qVQ4zC1+9CyAHnaOb4f7g==",
+      "type": "package",
+      "path": "microsoft.servicefabric.data.interfaces/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Data.Interfaces.dll",
+        "lib/net462/Microsoft.ServiceFabric.Data.Interfaces.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Data.Interfaces.dll",
+        "microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.data.interfaces.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.Data.Interfaces.dll"
+      ]
+    },
+    "Microsoft.ServiceFabric.Diagnostics.Internal/9.0.474-beta": {
+      "sha512": "8ApGzdvW79CSaCXfxjNZTTOPwS4DAD72IcVOh8vlCtLO538iSvJ2Rj0WDddoaMHh5DUX03lPlIuASFiuLZz8gA==",
+      "type": "package",
+      "path": "microsoft.servicefabric.diagnostics.internal/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Diagnostics.dll",
+        "lib/net462/Microsoft.ServiceFabric.Diagnostics.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Diagnostics.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.Diagnostics.xml",
+        "microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.diagnostics.internal.nuspec"
+      ]
+    },
+    "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+      "sha512": "WiMMd7pd+c6eT8PfotlmD80ApAZZyIOfIe5SFJhy9WDSQ1+vNz8LgjBrFAoIlhbvzfO1yKCgYbEqWvkrUl5UIg==",
+      "type": "package",
+      "path": "microsoft.servicefabric.fabrictransport.internal/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.V2.xml",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.dll",
+        "lib/net462/Microsoft.ServiceFabric.FabricTransport.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll",
+        "microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.fabrictransport.internal.nuspec",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.McgInterop.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.McgInterop.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll",
+        "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll",
+        "runtimes/linux/lib/net8.0/System.Private.CompilerServices.ICastable.dll",
+        "runtimes/linux/lib/net8.0/System.Private.Interop.dll"
+      ]
+    },
+    "Microsoft.ServiceFabric.Services/9.0.474-beta": {
+      "sha512": "h6JNmWCindinTc9ojHMdydgP22UsPEhTD8OvhC0yGxPfuELX/ZeRZKEuNxW8mcu2sp8Pas8DGw5cQ9kVnhq6eg==",
+      "type": "package",
+      "path": "microsoft.servicefabric.services/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Services.dll",
+        "lib/net462/Microsoft.ServiceFabric.Services.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.xml",
+        "microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.services.nuspec"
+      ]
+    },
+    "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+      "sha512": "Hr0/IhCLDw8YrYJveP1zBCzsJh25AXVht7OOUf+9czVlIKp7UHixzsue4Ce7vfnHulZMlMzJnqDt4dtn4E/1GQ==",
+      "type": "package",
+      "path": "microsoft.servicefabric.services.remoting/9.0.474-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "docs/readme.md",
+        "eula.txt",
+        "images/icon.png",
+        "lib/net462/Microsoft.ServiceFabric.Services.Remoting.dll",
+        "lib/net462/Microsoft.ServiceFabric.Services.Remoting.xml",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll",
+        "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.xml",
+        "microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512",
+        "microsoft.servicefabric.services.remoting.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "Microsoft.ServiceFabric.Services.Remoting >= 9.0.474-beta"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\bogic\\.nuget\\packages\\": {},
@@ -56,6 +439,12 @@
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "Microsoft.ServiceFabric.Services.Remoting": {
+            "target": "Package",
+            "version": "[9.0.474-beta, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
