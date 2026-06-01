@@ -1,16 +1,23 @@
+using AuthService.Data;
+using AuthService.Mapping;
+using AuthService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.ServiceFabric.Data;
+using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
+using Microsoft.ServiceFabric.Services.Communication.Runtime;
+using Microsoft.ServiceFabric.Services.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
-using Microsoft.ServiceFabric.Services.Communication.Runtime;
-using Microsoft.ServiceFabric.Services.Runtime;
-using Microsoft.ServiceFabric.Data;
 
 namespace AuthService
 {
@@ -28,38 +35,54 @@ namespace AuthService
         /// </summary>
         /// <returns>The collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
-        {
-            return new ServiceInstanceListener[]
+            => new ServiceInstanceListener[]
             {
-                new ServiceInstanceListener(serviceContext =>
-                    new KestrelCommunicationListener(serviceContext, "ServiceEndpoint", (url, listener) =>
+                new ServiceInstanceListener(ctx =>
+                    new KestrelCommunicationListener(ctx, "ServiceEndpoint", (url, listener) =>
                     {
-                        ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
-
                         var builder = WebApplication.CreateBuilder();
 
-                        builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
-                        builder.WebHost
-                                    .UseKestrel()
-                                    .UseContentRoot(Directory.GetCurrentDirectory())
-                                    .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
-                                    .UseUrls(url);
+                        var config = ctx.CodePackageActivationContext
+                            .GetConfigurationPackageObject("Config").Settings;
+                        var connStr = config.Sections["ConnectionStrings"]
+                            .Parameters["DefaultConnection"].Value;
+                        var jwtSecret = config.Sections["JwtSettings"]
+                            .Parameters["Secret"].Value;
+
+                        builder.Services.AddDbContext<AuthDbContext>(o =>
+                            o.UseSqlServer(connStr));
+                        builder.Services.AddScoped<IAuthService, AuthServiceImpl>();
+                        builder.Services.AddAutoMapper(typeof(AuthProfile));
                         builder.Services.AddControllers();
-                        builder.Services.AddEndpointsApiExplorer();
-                        builder.Services.AddSwaggerGen();
+                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                            .AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(jwtSecret)),
+                                ValidateIssuer = true,
+                                ValidIssuer = "TravelPlannerAPI",
+                                ValidateAudience = true,
+                                ValidAudience = "TravelPlannerClient",
+                                ValidateLifetime = true,
+                                ClockSkew = TimeSpan.Zero
+                            });
+                        builder.Services.AddAuthorization();
+                        builder.Services.AddCors(o => o.AddPolicy("AllowFrontend",
+                            p => p.WithOrigins("http://localhost:5173")
+                                   .AllowAnyHeader()
+                                   .AllowAnyMethod()
+                                   .AllowCredentials()));
+
+                        builder.WebHost.UseUrls(url);
+
                         var app = builder.Build();
-                        if (app.Environment.IsDevelopment())
-                        {
-                        app.UseSwagger();
-                        app.UseSwaggerUI();
-                        }
+                        app.UseCors("AllowFrontend");
+                        app.UseAuthentication();
                         app.UseAuthorization();
                         app.MapControllers();
-                        
                         return app;
-
                     }))
             };
-        }
     }
 }

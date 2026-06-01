@@ -467,3 +467,4 @@ C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthServ
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\AuthService.pdb
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\AuthService.genruntimeconfig.cache
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\ref\AuthService.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\staticwebassets.upToDateCheck.txt
