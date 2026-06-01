@@ -56,3 +56,14 @@ dkms.conf
 .env
 TravelPlannerApp/.vs/
 .vs/
+
+# .NET build output
+**/bin/
+**/obj/
+*.user
+
+# Node modules
+**/node_modules/
+
+# Frontend build
+**/dist/

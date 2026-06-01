@@ -461,7 +461,6 @@ C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthServ
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\staticwebassets.development.json
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\staticwebassets.build.endpoints.json
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\swae.build.ex.cache
-C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\staticwebassets.upToDateCheck.txt
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\AuthServ.2ED0AEC6.Up2Date
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\AuthService.dll
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\AuthService\obj\Debug\net8.0\win-x64\refint\AuthService.dll
