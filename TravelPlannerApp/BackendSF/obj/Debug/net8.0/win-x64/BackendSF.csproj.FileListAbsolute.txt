@@ -371,3 +371,11 @@ C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendS
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\obj\Debug\net8.0\win-x64\BackendSF.pdb
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\obj\Debug\net8.0\win-x64\BackendSF.genruntimeconfig.cache
 C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\obj\Debug\net8.0\win-x64\ref\BackendSF.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.Logging.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.Protocols.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\Microsoft.IdentityModel.Tokens.dll
+C:\Users\bogic\OneDrive\Documents\GitHub\travelPlanner\TravelPlannerApp\BackendSF\bin\Debug\net8.0\win-x64\System.IdentityModel.Tokens.Jwt.dll
