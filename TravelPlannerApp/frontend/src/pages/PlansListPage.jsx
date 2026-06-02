@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+import DashboardPage from './DashboardPage';
+
 export default function PlansListPage() {
-    return <div>Plans List</div>;
+    return <DashboardPage />;
 }

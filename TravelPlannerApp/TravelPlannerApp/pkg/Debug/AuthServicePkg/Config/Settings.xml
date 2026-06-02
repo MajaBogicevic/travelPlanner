@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://schemas.microsoft.com/2011/01/fabric">
+	<Section Name="ConnectionStrings">
+		<Parameter Name="DefaultConnection"
+		  Value="Server=localhost;Database=TravelPlannerDb;Trusted_Connection=True;TrustServerCertificate=True;" />
+	</Section>
+	<Section Name="JwtSettings">
+		<Parameter Name="Secret" Value="TravelPlannerSuperSecretKey2024!!XYZ" />
+		<Parameter Name="Issuer" Value="TravelPlannerAPI" />
+		<Parameter Name="Audience" Value="TravelPlannerClient" />
+		<Parameter Name="ExpiryDays" Value="7" />
+	</Section>
+</Settings>
