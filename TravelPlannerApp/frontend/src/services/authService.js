@@ -6,4 +6,4 @@ const authService = {
     getMe: () => api.get('/auth/me').then(r => r.data),
 };
 
-export default authService;
+export default authService; 
