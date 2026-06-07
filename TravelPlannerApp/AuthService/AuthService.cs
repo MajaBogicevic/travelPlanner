@@ -49,6 +49,12 @@ namespace AuthService
                         var jwtSecret = config.Sections["JwtSettings"]
                             .Parameters["Secret"].Value;
 
+                        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+                        {
+                            ["JwtSettings:Secret"] = jwtSecret,
+                            ["ConnectionStrings:DefaultConnection"] = connStr
+                        });
+
                         builder.Services.AddDbContext<AuthDbContext>(o =>
                             o.UseSqlServer(connStr));
                         builder.Services.AddScoped<IAuthService, AuthServiceImpl>();

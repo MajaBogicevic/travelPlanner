@@ -38,7 +38,6 @@
     <ProjectReference Include="..\BackendSF\BackendSF.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
-    <ProjectReference Include="..\NotificationService\NotificationService.csproj" />
     <ProjectReference Include="..\TravelService\TravelService.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>

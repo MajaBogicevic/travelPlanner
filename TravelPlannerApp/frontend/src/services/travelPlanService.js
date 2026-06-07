@@ -1,4 +1,4 @@
-import api from './api';
+import { travelApi as api } from './api';
 
 const travelPlanService = {
     getAll: () => api.get('/travel-plans').then(r => r.data),
