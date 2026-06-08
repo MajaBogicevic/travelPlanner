@@ -12,7 +12,7 @@ const TABS = [
     { id: 'overview', label: '?? Pregled' },
     { id: 'destinations', label: '?? Destinacije' },
     { id: 'activities', label: '?? Aktivnosti' },
-    { id: 'expenses', label: '?? Troökovi' },
+    { id: 'expenses', label: '?? Tro≈°kovi' },
     { id: 'checklist', label: '? Checklist' },
     { id: 'map', label: '??? Mapa' },
 ];
@@ -56,15 +56,15 @@ export default function PlanDetailPage() {
                     <div>
                         <h1 style={styles.title}>{plan.name}</h1>
                         <p style={styles.dates}>
-                            {new Date(plan.startDate).toLocaleDateString('bs-BA')} ó{' '}
+                            {new Date(plan.startDate).toLocaleDateString('bs-BA')} ‚Äî{' '}
                             {new Date(plan.endDate).toLocaleDateString('bs-BA')}
                         </p>
                     </div>
                 </div>
                 <div style={styles.headerRight}>
                     <div style={styles.budgetBox}>
-                        <span style={styles.budgetLabel}>Budûet</span>
-                        <span style={styles.budgetAmount}>{plan.budget?.toFixed(2)} Ä</span>
+                        <span style={styles.budgetLabel}>Bud≈æet</span>
+                        <span style={styles.budgetAmount}>{plan.budget?.toFixed(2)} ‚Ç¨</span>
                     </div>
                     <div style={styles.budgetBox}>
                         <span style={styles.budgetLabel}>Preostalo</span>
@@ -72,7 +72,7 @@ export default function PlanDetailPage() {
                             ...styles.budgetAmount,
                             color: plan.remainingBudget < 0 ? '#ff5252' : '#69f0ae'
                         }}>
-                            {plan.remainingBudget?.toFixed(2)} Ä
+                            {plan.remainingBudget?.toFixed(2)} ‚Ç¨
                         </span>
                     </div>
                     <button style={styles.editBtn} onClick={() => navigate(`/plans/${id}/edit`)}>

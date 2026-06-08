@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
 
 const emptyForm = { name: '', location: '', arrivalDate: '', departureDate: '', description: '' };

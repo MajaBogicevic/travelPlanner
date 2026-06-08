@@ -4,7 +4,7 @@
           xmlns="http://schemas.microsoft.com/2011/01/fabric">
 	<Section Name="ConnectionStrings">
 		<Parameter Name="DefaultConnection"
-			 Value="Server=localhost;Database=TravelPlannerDb;User Id=sa;Password=TravelPlanner123!;TrustServerCertificate=True;" />	
+			Value="Server=tcp:localhost,1433;Database=TravelPlannerAuthDb;User Id=travelplanner;Password=Travel123!;TrustServerCertificate=True;" />
 	</Section>
 	<Section Name="JwtSettings">
 		<Parameter Name="Secret" Value="TravelPlannerSuperSecretKey2024!!XYZ" />

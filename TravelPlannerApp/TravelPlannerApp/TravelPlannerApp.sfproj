@@ -4,7 +4,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>edc849d1-2fb6-4d44-a37b-5771b60d8879</ProjectGuid>
     <ProjectVersion>2.7</ProjectVersion>
-    <MinToolsVersion>16.5</MinToolsVersion>
+    <MinToolsVersion>17.0</MinToolsVersion>
     <SupportedMSBuildNuGetPackageVersion>1.7.9</SupportedMSBuildNuGetPackageVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
@@ -29,9 +29,6 @@
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AuthService\AuthService.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
@@ -41,6 +38,9 @@
     <ProjectReference Include="..\TravelService\TravelService.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

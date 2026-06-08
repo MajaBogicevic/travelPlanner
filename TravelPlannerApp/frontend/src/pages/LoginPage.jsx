@@ -33,7 +33,7 @@ export default function LoginPage() {
             await login(form.email, form.password);
             navigate('/');
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Pogreöni podaci');
+            setApiError(err.response?.data?.message || 'Pogre≈°ni podaci');
         } finally {
             setSubmitting(false);
         }

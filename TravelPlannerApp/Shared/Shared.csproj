@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="9.0.474-beta" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Fabric.MSBuild" Version="1.7.9" />
 	</ItemGroup>
 
 </Project>

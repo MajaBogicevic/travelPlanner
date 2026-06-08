@@ -5,7 +5,7 @@ import geocodingService from '../../services/geocodingService';
 const STATUS_LABELS = {
     Planned: { label: 'Planirano', color: '#1565C0', bg: '#e3f2fd' },
     Reserved: { label: 'Rezervisano', color: '#6a1b9a', bg: '#f3e5f5' },
-    Completed: { label: 'Zavröeno', color: '#388e3c', bg: '#e8f5e9' },
+    Completed: { label: 'Zavr≈°eno', color: '#388e3c', bg: '#e8f5e9' },
     Cancelled: { label: 'Otkazano', color: '#d32f2f', bg: '#ffebee' },
 };
 
@@ -112,7 +112,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
             }
             setShowForm(false); fetchActivities(); onRefresh();
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greöka pri snimanju');
+            setApiError(err.response?.data?.message || 'Gre≈°ka pri snimanju');
         } finally { setSaving(false); }
     };
 
@@ -121,7 +121,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
         try {
             await travelPlanService.deleteActivity(planId, id);
             fetchActivities(); onRefresh();
-        } catch { alert('Greöka pri brisanju'); }
+        } catch { alert('Gre≈°ka pri brisanju'); }
     };
 
     const renderCalendar = () => {
@@ -202,7 +202,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                                 <select style={styles.input} name='status' value={form.status} onChange={handleChange}>
                                     <option value='Planned'>Planirano</option>
                                     <option value='Reserved'>Rezervisano</option>
-                                    <option value='Completed'>Zavröeno</option>
+                                    <option value='Completed'>Zavr≈°eno</option>
                                     <option value='Cancelled'>Otkazano</option>
                                 </select>
                             </div>
@@ -219,12 +219,12 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                             </div>
                         </div>
                         <div style={styles.field}>
-                            <label style={styles.label}>Lokacija (pretraûi)</label>
+                            <label style={styles.label}>Lokacija (pretra≈æi)</label>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <input style={{ ...styles.input, flex: 1 }} value={geoQuery}
                                     onChange={e => setGeoQuery(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), searchGeo())}
-                                    placeholder='Pretraûi lokaciju...' />
+                                    placeholder='Pretra≈æi lokaciju...' />
                                 <button type='button' style={styles.geoBtn} onClick={searchGeo} disabled={geoLoading}>
                                     {geoLoading ? '...' : '??'}
                                 </button>
@@ -246,7 +246,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                         </div>
                         <div style={styles.formRow}>
                             <div style={styles.field}>
-                                <label style={styles.label}>Procijenjeni troöak (Ä)</label>
+                                <label style={styles.label}>Procijenjeni tro≈°ak (‚Ç¨)</label>
                                 <input style={styles.input} type='number' min='0' step='0.01' name='estimatedCost' value={form.estimatedCost} onChange={handleChange} />
                             </div>
                             <div style={styles.field}>
@@ -256,7 +256,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                         </div>
                         {apiError && <div style={styles.apiError}>{apiError}</div>}
                         <div style={styles.formBtns}>
-                            <button type='button' style={styles.cancelBtn} onClick={() => setShowForm(false)}>Otkaûi</button>
+                            <button type='button' style={styles.cancelBtn} onClick={() => setShowForm(false)}>Otka≈æi</button>
                             <button type='submit' style={styles.saveBtn} disabled={saving}>{saving ? 'Snima...' : 'Sa?uvaj'}</button>
                         </div>
                     </form>
@@ -281,9 +281,9 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                                             <div style={styles.actName}>{act.name}</div>
                                             <div style={styles.actMeta}>
                                                 ?? {new Date(act.date).toLocaleDateString('bs-BA')}
-                                                {act.time && <span> ï ?? {act.time}</span>}
-                                                {act.location && <span> ï ?? {act.location}</span>}
-                                                {act.estimatedCost != null && <span> ï ?? {act.estimatedCost} Ä</span>}
+                                                {act.time && <span> ‚Ä¢ ?? {act.time}</span>}
+                                                {act.location && <span> ‚Ä¢ ?? {act.location}</span>}
+                                                {act.estimatedCost != null && <span> ‚Ä¢ ?? {act.estimatedCost} ‚Ç¨</span>}
                                             </div>
                                             {act.description && <p style={styles.actDesc}>{act.description}</p>}
                                         </div>

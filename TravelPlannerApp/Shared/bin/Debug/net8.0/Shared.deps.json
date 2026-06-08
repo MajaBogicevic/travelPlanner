@@ -8,13 +8,17 @@
     ".NETCoreApp,Version=v8.0": {
       "Shared/1.0.0": {
         "dependencies": {
-          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta"
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta",
+          "Microsoft.VisualStudio.Azure.Fabric.MSBuild": "1.7.9"
         },
         "runtime": {
           "Shared.dll": {}
         }
       },
       "Microsoft.ServiceFabric/12.0.474-beta": {
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        },
         "runtime": {
           "lib/net8.0/Microsoft.ServiceFabric.Preview.dll": {
             "assemblyVersion": "12.0.0.0",
@@ -246,7 +250,9 @@
             "fileVersion": "9.9.0.0"
           }
         }
-      }
+      },
+      "Microsoft.VisualStudio.Azure.Fabric.MSBuild/1.7.9": {},
+      "System.Memory/4.5.5": {}
     }
   },
   "libraries": {
@@ -310,6 +316,20 @@
       "sha512": "sha512-Hr0/IhCLDw8YrYJveP1zBCzsJh25AXVht7OOUf+9czVlIKp7UHixzsue4Ce7vfnHulZMlMzJnqDt4dtn4E/1GQ==",
       "path": "microsoft.servicefabric.services.remoting/9.0.474-beta",
       "hashPath": "microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512"
+    },
+    "Microsoft.VisualStudio.Azure.Fabric.MSBuild/1.7.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-d8NgCY4KgiKxfZ5mJkKI0HY0D8wN788c1jBglivvUYq95XvZBLfTOvBg676vtkA6YAEu4lvaV6YIncJegAmjsg==",
+      "path": "microsoft.visualstudio.azure.fabric.msbuild/1.7.9",
+      "hashPath": "microsoft.visualstudio.azure.fabric.msbuild.1.7.9.nupkg.sha512"
+    },
+    "System.Memory/4.5.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+      "path": "system.memory/4.5.5",
+      "hashPath": "system.memory.4.5.5.nupkg.sha512"
     }
   }
 }

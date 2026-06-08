@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.Kestrel" Version="9.0.474-beta" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Fabric.MSBuild" Version="1.7.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

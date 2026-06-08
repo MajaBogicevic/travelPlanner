@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import SharePlanModal from '../SharePlanModal';
 
 export default function OverviewTab({ plan, navigate, planId }) {

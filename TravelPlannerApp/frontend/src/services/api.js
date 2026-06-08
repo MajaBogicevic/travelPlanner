@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: import.meta.env.VITE_API_BASE_URL + '/api',
 });
 
 export const travelApi = axios.create({
-    baseURL: import.meta.env.VITE_TRAVEL_API_BASE_URL,
+    baseURL: import.meta.env.VITE_TRAVEL_API_BASE_URL + '/api',
 });
 
 const addInterceptors = (instance) => {

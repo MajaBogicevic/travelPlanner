@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import travelPlanService from '../services/travelPlanService';
 
 export default function SharePlanModal({ planId, onClose }) {

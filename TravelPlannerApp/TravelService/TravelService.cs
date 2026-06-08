@@ -50,7 +50,11 @@ namespace TravelService
                             typeof(ActivityProfile),
                             typeof(ExpenseProfile),
                             typeof(ChecklistProfile));
-                        builder.Services.AddControllers();
+                        builder.Services.AddControllers().AddJsonOptions(options =>
+                            {
+                                options.JsonSerializerOptions.Converters.Add(
+                                    new System.Text.Json.Serialization.JsonStringEnumConverter());
+                            });
                         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,

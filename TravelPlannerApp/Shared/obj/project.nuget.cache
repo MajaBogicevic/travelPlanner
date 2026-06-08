@@ -1,17 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "m/ysxRoke1s=",
+  "dgSpecHash": "gOVAKP4co00=",
   "success": true,
-  "projectFilePath": "C:\\Users\\bogic\\OneDrive\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\Shared\\Shared.csproj",
+  "projectFilePath": "C:\\Users\\nikol\\Documents\\GitHub\\travelPlanner\\TravelPlannerApp\\Shared\\Shared.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric\\12.0.474-beta\\microsoft.servicefabric.12.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data\\9.0.474-beta\\microsoft.servicefabric.data.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.extensions\\9.0.474-beta\\microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.data.interfaces\\9.0.474-beta\\microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.diagnostics.internal\\9.0.474-beta\\microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.fabrictransport.internal\\9.0.474-beta\\microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services\\9.0.474-beta\\microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
-    "C:\\Users\\bogic\\.nuget\\packages\\microsoft.servicefabric.services.remoting\\9.0.474-beta\\microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512"
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric\\12.0.474-beta\\microsoft.servicefabric.12.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.data\\9.0.474-beta\\microsoft.servicefabric.data.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.data.extensions\\9.0.474-beta\\microsoft.servicefabric.data.extensions.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.data.interfaces\\9.0.474-beta\\microsoft.servicefabric.data.interfaces.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.diagnostics.internal\\9.0.474-beta\\microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.fabrictransport.internal\\9.0.474-beta\\microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.services\\9.0.474-beta\\microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.servicefabric.services.remoting\\9.0.474-beta\\microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\microsoft.visualstudio.azure.fabric.msbuild\\1.7.9\\microsoft.visualstudio.azure.fabric.msbuild.1.7.9.nupkg.sha512",
+    "C:\\Users\\nikol\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512"
   ],
   "logs": []
 }
