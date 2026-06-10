@@ -10,6 +10,7 @@ import PlanDetailPage from './pages/PlanDetailPage';
 import EditPlanPage from './pages/EditPlanPage';
 import SharedPlanPage from './pages/SharedPlanPage';
 import AdminPage from './pages/AdminPage';
+import SharedEditPlanPage from './pages/SharedEditPlanPage';
 
 export default function App() {
     return (
@@ -19,6 +20,7 @@ export default function App() {
                     <Route path='/login' element={<LoginPage />} />
                     <Route path='/register' element={<RegisterPage />} />
                     <Route path='/shared/:token' element={<SharedPlanPage />} />
+                    <Route path='/shared/:token/edit' element={<SharedEditPlanPage />} />
                     <Route path='/' element={
                         <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                     <Route path='/plans' element={

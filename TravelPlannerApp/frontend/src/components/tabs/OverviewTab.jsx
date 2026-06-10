@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import SharePlanModal from '../SharePlanModal';
+import travelPlanService from '../../services/travelPlanService';
+import editIcon from '../../assets/edit.png';
+import deleteIcon from '../../assets/delete.png';
+import shareIcon from '../../assets/share.png';
 
 export default function OverviewTab({ plan, navigate, planId }) {
     const [showShare, setShowShare] = useState(false);
@@ -64,10 +68,18 @@ export default function OverviewTab({ plan, navigate, planId }) {
                     )}
                     <div style={styles.actionRow}>
                         <button style={styles.editBtn} onClick={() => navigate(`/plans/${planId}/edit`)}>
-                            ✏️ Uredi plan
+                            <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
                         </button>
                         <button style={styles.shareBtn} onClick={() => setShowShare(true)}>
-                            🔗 Podijeli
+                            <img src={shareIcon} alt="Podeli" style={{ width: '16px', height: '18px', objectFit: 'contain' }} />
+                        </button>
+                        <button style={styles.deleteBtn} onClick={async () => {
+                            if (window.confirm('Da li ste sigurni da želite obrisati ovaj plan?')) {
+                                await travelPlanService.delete(planId);
+                                navigate('/');
+                            }
+                        }}>
+                            <img src={deleteIcon} alt="Obrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
                         </button>
                     </div>
                 </div>
@@ -135,24 +147,25 @@ export default function OverviewTab({ plan, navigate, planId }) {
 const styles = {
     container: {},
     statsRow: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '12px', marginBottom: '24px' },
-    statCard: { backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px' },
-    statNumber: { fontSize: '28px', fontWeight: 'bold', color: '#1565C0' },
-    statLabel: { fontSize: '12px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    statCard: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '4px' },
+    statNumber: { fontSize: '28px', fontWeight: '700', color: 'var(--green-light)', fontFamily: 'var(--sans)' },
+    statLabel: { fontSize: '11px', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.5px' },
     grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px', marginBottom: '16px' },
-    card: { backgroundColor: 'white', borderRadius: '8px', padding: '24px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', marginBottom: '16px' },
-    cardTitle: { margin: '0 0 16px 0', color: '#1565C0', fontSize: '16px', borderBottom: '1px solid #e8f0fe', paddingBottom: '8px' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '24px', marginBottom: '16px' },
+    cardTitle: { margin: '0 0 16px 0', color: 'var(--green-light)', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.8px', borderBottom: '1px solid var(--border)', paddingBottom: '10px', fontFamily: 'var(--sans)' },
     infoRow: { display: 'flex', gap: '12px', marginBottom: '10px', fontSize: '14px', alignItems: 'flex-start' },
-    infoLabel: { color: '#888', minWidth: '130px', fontWeight: '500' },
-    actionRow: { display: 'flex', gap: '12px', marginTop: '20px' },
-    editBtn: { padding: '8px 18px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' },
-    shareBtn: { padding: '8px 18px', backgroundColor: '#388e3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '13px' },
+    infoLabel: { color: 'var(--text)', minWidth: '130px', fontWeight: '500' },
+    actionRow: { display: 'flex', gap: '12px', marginTop: '20px', flexWrap: 'wrap' },
+    editBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
+    shareBtn: { padding: '8px 18px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
+    deleteBtn: { padding: '8px 18px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
     budgetNumbers: { display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' },
     budgetItem: { display: 'flex', justifyContent: 'space-between', fontSize: '14px' },
-    budgetValue: { fontWeight: '600', fontSize: '16px' },
-    progressTrack: { height: '10px', backgroundColor: '#e0e0e0', borderRadius: '5px', overflow: 'hidden' },
-    progressFill: { height: '100%', borderRadius: '5px', transition: 'width 0.5s ease' },
-    overBudgetWarning: { marginTop: '12px', padding: '10px', backgroundColor: '#ffebee', color: '#d32f2f', borderRadius: '4px', fontSize: '13px' },
+    budgetValue: { fontWeight: '600', fontSize: '16px', color: 'var(--text-h)' },
+    progressTrack: { height: '6px', background: 'var(--border)', borderRadius: '99px', overflow: 'hidden' },
+    progressFill: { height: '100%', borderRadius: '99px', transition: 'width 0.5s ease' },
+    overBudgetWarning: { marginTop: '12px', padding: '10px 14px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', fontSize: '13px' },
     destGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' },
-    destChip: { display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '6px' },
-    destNum: { width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#1565C0', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 },
+    destChip: { display: 'flex', gap: '10px', alignItems: 'center', padding: '10px 14px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' },
+    destNum: { width: '24px', height: '24px', borderRadius: '50%', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 },
 };

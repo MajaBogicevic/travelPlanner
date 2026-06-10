@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import travelPlanService from '../services/travelPlanService';
+import deleteIcon from '../assets/delete.png';
 
 export default function EditPlanPage() {
     const { id } = useParams();
@@ -60,7 +61,7 @@ export default function EditPlanPage() {
         catch { setApiError('Greška pri brisanju plana.'); setShowDeleteConfirm(false); setSubmitting(false); }
     };
 
-    if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}><p style={{ color: '#666' }}>Učitavanje...</p></div>;
+    if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100svh', background: 'var(--bg)' }}><p style={{ color: 'var(--text)' }}>Ucitavanje...</p></div>;
 
     return (
         <div style={styles.container}>
@@ -99,7 +100,9 @@ export default function EditPlanPage() {
                         <textarea style={styles.textarea} name='notes' value={form.notes} onChange={handleChange} />
                     </div>
                     <div style={styles.buttons}>
-                        <button type='button' style={styles.deleteBtn} onClick={() => setShowDeleteConfirm(true)}>🗑️ Obriši plan</button>
+                        <button type='button' style={styles.deleteBtn} onClick={() => setShowDeleteConfirm(true)}>
+                            <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                        </button>
                         <div style={{ display: 'flex', gap: '12px' }}>
                             <button style={styles.cancelBtn} type='button' onClick={() => navigate(`/plans/${id}`)}>Otkaži</button>
                             <button style={styles.submitBtn} type='submit' disabled={submitting}>{submitting ? 'Snima se...' : 'Sačuvaj promjene'}</button>
@@ -111,8 +114,10 @@ export default function EditPlanPage() {
             {showDeleteConfirm && (
                 <div style={styles.overlay}>
                     <div style={styles.dialog}>
-                        <h3 style={{ margin: '0 0 12px 0', color: '#d32f2f' }}>⚠️ Obriši plan?</h3>
-                        <p style={{ color: '#555', marginBottom: '20px' }}>Ovo će trajno obrisati plan zajedno sa svim destinacijama, aktivnostima, troškovima i checklistom. Radnja se ne može poništiti.</p>
+                        <h3 style={{ margin: '0 0 12px 0', color: 'var(--red)', fontFamily: 'var(--serif)' }}>Obrisi plan?</h3>
+                        <p style={{ color: 'var(--text)', marginBottom: '20px', fontSize: '14px', lineHeight: 1.6 }}>
+                            Ovo ce trajno obrisati plan zajedno sa svim destinacijama, aktivnostima, troskovima i listom obaveza. Radnja se ne moze ponistiti.
+                        </p>
                         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
                             <button style={styles.cancelBtn} onClick={() => setShowDeleteConfirm(false)}>Odustani</button>
                             <button style={{ ...styles.submitBtn, backgroundColor: '#d32f2f' }} onClick={handleDelete} disabled={submitting}>{submitting ? 'Briše se...' : 'Da, obriši'}</button>
@@ -125,19 +130,20 @@ export default function EditPlanPage() {
 }
 
 const styles = {
-    container: { minHeight: '100vh', backgroundColor: '#f5f5f5', display: 'flex', justifyContent: 'center', padding: '32px 16px' },
-    card: { backgroundColor: 'white', padding: '40px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '600px', height: 'fit-content' },
-    title: { color: '#1565C0', marginBottom: '24px' },
-    field: { marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '4px' },
+    container: { minHeight: '100svh', background: 'var(--bg)', display: 'flex', justifyContent: 'center', padding: '48px 16px' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', padding: '40px', borderRadius: 'var(--radius-lg)', width: '100%', maxWidth: '620px', height: 'fit-content' },
+    title: { fontFamily: 'var(--serif)', fontSize: '28px', fontWeight: 500, color: 'var(--text-h)', marginBottom: '28px', letterSpacing: '-0.3px' },
+    field: { marginBottom: '18px', display: 'flex', flexDirection: 'column', gap: '6px' },
     row: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
-    input: { padding: '10px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px' },
-    textarea: { padding: '10px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px', minHeight: '80px', resize: 'vertical' },
-    error: { color: '#d32f2f', fontSize: '12px' },
-    apiError: { backgroundColor: '#ffebee', color: '#d32f2f', padding: '10px', borderRadius: '4px', marginBottom: '16px' },
-    buttons: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px' },
-    cancelBtn: { padding: '10px 24px', backgroundColor: 'white', color: '#666', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' },
-    submitBtn: { padding: '10px 24px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    deleteBtn: { padding: '10px 20px', backgroundColor: 'white', color: '#d32f2f', border: '1px solid #ffcdd2', borderRadius: '4px', cursor: 'pointer' },
-    overlay: { position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' },
-    dialog: { backgroundColor: 'white', borderRadius: '8px', padding: '32px', maxWidth: '440px', width: '100%', boxShadow: '0 10px 40px rgba(0,0,0,0.2)' },
+    label: { fontSize: '13px', fontWeight: 500, color: 'var(--text-2)', letterSpacing: '0.2px' },
+    input: { padding: '11px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', boxSizing: 'border-box' },
+    textarea: { padding: '11px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', minHeight: '88px', resize: 'vertical', boxSizing: 'border-box' },
+    error: { color: 'var(--red)', fontSize: '12px' },
+    apiError: { background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', padding: '11px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '16px', fontSize: '13px' },
+    buttons: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '28px' },
+    cancelBtn: { padding: '10px 22px', background: 'transparent', color: 'var(--text-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    submitBtn: { padding: '10px 22px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px', fontWeight: 500 },
+    deleteBtn: { padding: '10px 18px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    overlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' },
+    dialog: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '32px', maxWidth: '440px', width: '100%' },
 };

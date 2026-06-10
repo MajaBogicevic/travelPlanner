@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
 import geocodingService from '../../services/geocodingService';
+import editIcon from '../../assets/edit.png';
+import deleteIcon from '../../assets/delete.png';
 
 const STATUS_LABELS = {
-    Planned: { label: 'Planirano', color: '#1565C0', bg: '#e3f2fd' },
-    Reserved: { label: 'Rezervisano', color: '#6a1b9a', bg: '#f3e5f5' },
-    Completed: { label: 'Završeno', color: '#388e3c', bg: '#e8f5e9' },
-    Cancelled: { label: 'Otkazano', color: '#d32f2f', bg: '#ffebee' },
+    Planned: { label: 'Planirano',color: '#60a5fa', bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)' },
+    Reserved: { label: 'Rezervisano', color: 'var(--amber)', bg: 'var(--amber-bg)', border: 'rgba(232,168,56,0.3)' },
+    Completed: { label: 'Zavrseno', color: 'var(--green-light)', bg: 'var(--green-glow)', border: 'rgba(64,145,108,0.35)' },
+    Cancelled: { label: 'Otkazano', color: 'var(--red)', bg: 'var(--red-bg)', border: 'rgba(224,92,92,0.3)' },
 };
 
 const emptyForm = {
@@ -15,7 +17,7 @@ const emptyForm = {
     estimatedCost: '', status: 'Planned'
 };
 
-export default function ActivitiesTab({ planId, onRefresh }) {
+export default function ActivitiesTab({ planId, onRefresh, plan }) {
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -54,6 +56,10 @@ export default function ActivitiesTab({ planId, onRefresh }) {
         const errs = {};
         if (!form.name.trim()) errs.name = 'Naziv je obavezan';
         if (!form.date) errs.date = 'Datum je obavezan';
+        if (plan && form.date && new Date(form.date) < new Date(plan.startDate))
+            errs.date = 'Datum ne moze biti prije pocetka plana';
+        if (plan && form.date && new Date(form.date) > new Date(plan.endDate))
+            errs.date = 'Datum ne moze biti nakon zavrsetka plana';
         return errs;
     };
 
@@ -194,7 +200,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                         <div style={styles.formRow}>
                             <div style={styles.field}>
                                 <label style={styles.label}>Naziv *</label>
-                                <input style={styles.input} name='name' value={form.name} onChange={handleChange} placeholder='npr. Posjet Akropoli' />
+                                <input style={styles.input} name='name' value={form.name} onChange={handleChange} placeholder='npr. Poseti Akropoli' />
                                 {errors.name && <span style={styles.error}>{errors.name}</span>}
                             </div>
                             <div style={styles.field}>
@@ -257,7 +263,7 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                         {apiError && <div style={styles.apiError}>{apiError}</div>}
                         <div style={styles.formBtns}>
                             <button type='button' style={styles.cancelBtn} onClick={() => setShowForm(false)}>Otkaži</button>
-                            <button type='submit' style={styles.saveBtn} disabled={saving}>{saving ? 'Snima...' : 'Sa?uvaj'}</button>
+                            <button type='submit' style={styles.saveBtn} disabled={saving}>{saving ? 'Snima...' : 'Sacuvaj'}</button>
                         </div>
                     </form>
                 </div>
@@ -280,19 +286,33 @@ export default function ActivitiesTab({ planId, onRefresh }) {
                                         <div>
                                             <div style={styles.actName}>{act.name}</div>
                                             <div style={styles.actMeta}>
-                                                ?? {new Date(act.date).toLocaleDateString('bs-BA')}
-                                                {act.time && <span> • ?? {act.time}</span>}
-                                                {act.location && <span> • ?? {act.location}</span>}
-                                                {act.estimatedCost != null && <span> • ?? {act.estimatedCost} €</span>}
+                                                {new Date(act.date).toLocaleDateString('sr-RS')}
+                                                {act.time && <span> • {act.time}</span>}
+                                                {act.location && <span> • {act.location}</span>}
+                                                {act.estimatedCost != null && <span> • {act.estimatedCost} €</span>}
                                             </div>
                                             {act.description && <p style={styles.actDesc}>{act.description}</p>}
                                         </div>
                                     </div>
                                     <div style={styles.cardRight}>
-                                        <span style={{ ...styles.statusBadge, backgroundColor: s.bg, color: s.color }}>{s.label}</span>
+                                        <span style={{ 
+                                            padding: '2px 8px',
+                                            borderRadius: '99px',
+                                            fontSize: '11px',
+                                            fontWeight: '500',
+                                            color: s.color,
+                                            background: s.bg,
+                                            border: `1px solid ${s.border}`,
+                                        }}>
+                                            {s.label}
+                                        </span>
                                         <div style={styles.cardActions}>
-                                            <button style={styles.editBtn} onClick={() => openEdit(act)}>??</button>
-                                            <button style={styles.deleteBtn} onClick={() => handleDelete(act.id)}>???</button>
+                                            <button style={styles.editBtn} onClick={() => openEdit(act)}>
+                                                <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                            </button>
+                                            <button style={styles.deleteBtn} onClick={() => handleDelete(act.id)}>
+                                                <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -307,51 +327,51 @@ export default function ActivitiesTab({ planId, onRefresh }) {
 
 const styles = {
     topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
-    sectionTitle: { margin: 0, color: '#333', fontSize: '18px' },
-    addBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    viewToggle: { display: 'flex', border: '1px solid #ccc', borderRadius: '4px', overflow: 'hidden' },
-    toggleBtn: { padding: '8px 16px', backgroundColor: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', color: '#555' },
-    toggleActive: { backgroundColor: '#1565C0', color: 'white' },
-    formCard: { backgroundColor: 'white', borderRadius: '8px', padding: '24px', marginBottom: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' },
-    formTitle: { margin: '0 0 16px 0', color: '#1565C0' },
+    sectionTitle: { margin: 0, color: 'var(--text-h)', fontSize: '18px', fontFamily: 'var(--serif)' },
+    addBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
+    viewToggle: { display: 'flex', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' },
+    toggleBtn: { padding: '8px 16px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px', color: 'var(--text)', fontFamily: 'var(--sans)' },
+    toggleActive: { background: 'var(--green-dark)', color: 'var(--green-pale)' },
+    formCard: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', marginBottom: '20px' },
+    formTitle: { margin: '0 0 16px 0', color: 'var(--green-light)', fontSize: '14px', fontWeight: '600', fontFamily: 'var(--sans)' },
     formRow: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
     field: { marginBottom: '12px', display: 'flex', flexDirection: 'column', gap: '4px' },
-    label: { fontSize: '13px', color: '#555', fontWeight: '500' },
-    input: { padding: '9px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px' },
-    error: { color: '#d32f2f', fontSize: '12px' },
-    apiError: { backgroundColor: '#ffebee', color: '#d32f2f', padding: '10px', borderRadius: '4px', marginBottom: '12px', fontSize: '13px' },
-    geoBtn: { padding: '9px 14px', backgroundColor: '#e3f2fd', color: '#1565C0', border: '1px solid #bbdefb', borderRadius: '4px', cursor: 'pointer' },
-    geoDropdown: { backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '4px', maxHeight: '200px', overflowY: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' },
-    geoItem: { padding: '10px 12px', cursor: 'pointer', fontSize: '13px', borderBottom: '1px solid #f5f5f5' },
-    geoClose: { padding: '8px 12px', color: '#888', cursor: 'pointer', fontSize: '12px', textAlign: 'center', borderTop: '1px solid #eee' },
-    selectedLoc: { fontSize: '13px', color: '#388e3c', padding: '6px 0' },
+    label: { fontSize: '12px', color: 'var(--text-2)', fontWeight: '500', letterSpacing: '0.2px' },
+    input: { padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', boxSizing: 'border-box', width: '100%' },
+    error: { color: 'var(--red)', fontSize: '12px' },
+    apiError: { background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '12px', fontSize: '13px' },
+    geoBtn: { padding: '10px 14px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', whiteSpace: 'nowrap' },
+    geoDropdown: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', maxHeight: '200px', overflowY: 'auto' },
+    geoItem: { padding: '10px 14px', cursor: 'pointer', fontSize: '13px', color: 'var(--text-2)', borderBottom: '1px solid var(--border)' },
+    geoClose: { padding: '8px 14px', color: 'var(--text)', cursor: 'pointer', fontSize: '12px', textAlign: 'center', borderTop: '1px solid var(--border)' },
+    selectedLoc: { fontSize: '13px', color: 'var(--green-light)', padding: '6px 0' },
     formBtns: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
-    cancelBtn: { padding: '8px 20px', backgroundColor: 'white', color: '#666', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' },
-    saveBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    empty: { textAlign: 'center', padding: '40px', color: '#888', backgroundColor: 'white', borderRadius: '8px' },
+    cancelBtn: { padding: '8px 18px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    saveBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    empty: { textAlign: 'center', padding: '40px', color: 'var(--text)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' },
     list: { display: 'flex', flexDirection: 'column', gap: '10px' },
-    card: { backgroundColor: 'white', borderRadius: '8px', padding: '16px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' },
     cardLeft: { display: 'flex', gap: '14px', alignItems: 'flex-start' },
     cardRight: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', flexShrink: 0 },
-    statusDot: { width: '10px', height: '10px', borderRadius: '50%', marginTop: '5px', flexShrink: 0 },
-    actName: { fontSize: '15px', fontWeight: '600', marginBottom: '4px' },
-    actMeta: { fontSize: '13px', color: '#666' },
-    actDesc: { fontSize: '13px', color: '#777', margin: '4px 0 0 0' },
-    statusBadge: { padding: '3px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '500' },
+    statusDot: { width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px', flexShrink: 0 },
+    actName: { fontSize: '15px', fontWeight: '600', color: 'var(--text-h)', marginBottom: '4px' },
+    actMeta: { fontSize: '13px', color: 'var(--text)' },
+    actDesc: { fontSize: '13px', color: 'var(--text)', margin: '4px 0 0 0' },
+    statusBadge: { padding: '3px 10px', borderRadius: '99px', fontSize: '11px', fontWeight: '500', marginBottom: '10px'  },
     cardActions: { display: 'flex', gap: '6px' },
-    editBtn: { padding: '5px 10px', backgroundColor: '#e3f2fd', color: '#1565C0', border: '1px solid #bbdefb', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
-    deleteBtn: { padding: '5px 10px', backgroundColor: '#ffebee', color: '#d32f2f', border: '1px solid #ffcdd2', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
+    editBtn: { padding: '5px 12px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px'  },
+    deleteBtn: { padding: '5px 10px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px' },
 };
 
 const calStyles = {
-    container: { backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', marginBottom: '16px' },
+    container: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '20px', marginBottom: '16px' },
     header: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' },
-    navBtn: { padding: '6px 14px', backgroundColor: '#e3f2fd', color: '#1565C0', border: '1px solid #bbdefb', borderRadius: '4px', cursor: 'pointer' },
-    monthLabel: { fontSize: '16px', fontWeight: '600', color: '#1565C0' },
+    navBtn: { padding: '6px 14px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)' },
+    monthLabel: { fontSize: '15px', fontWeight: '600', color: 'var(--text-h)', fontFamily: 'var(--serif)' },
     grid: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' },
-    dayName: { textAlign: 'center', fontSize: '12px', fontWeight: '600', color: '#888', padding: '8px 0' },
-    cell: { minHeight: '80px', padding: '6px', backgroundColor: '#fafafa', borderRadius: '4px', border: '1px solid #f0f0f0' },
-    emptyCell: { backgroundColor: 'transparent', border: '1px solid transparent' },
-    dayNum: { fontSize: '13px', fontWeight: '600', color: '#333', marginBottom: '4px' },
+    dayName: { textAlign: 'center', fontSize: '11px', fontWeight: '600', color: 'var(--text)', padding: '8px 0', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    cell: { minHeight: '80px', padding: '6px', background: 'var(--bg)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' },
+    emptyCell: { background: 'transparent', border: '1px solid transparent' },
+    dayNum: { fontSize: '12px', fontWeight: '600', color: 'var(--text-2)', marginBottom: '4px' },
     actChip: { fontSize: '11px', padding: '2px 6px', borderRadius: '3px', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 };

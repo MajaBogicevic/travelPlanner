@@ -27,6 +27,10 @@ const travelPlanService = {
     toggleChecklist: (pid, id) => api.patch(`/travel-plans/${pid}/checklist/${id}/toggle`).then(r => r.data),
     deleteChecklistItem: (pid, id) => api.delete(`/travel-plans/${pid}/checklist/${id}`),
 
+    addActivityWithToken: (pid, a, token) => api.post(`/travel-plans/${pid}/activities`, a, { headers: { 'X-Share-Token': token } }).then(r => r.data),
+    addExpenseWithToken: (pid, e, token) => api.post(`/travel-plans/${pid}/expenses`, e, { headers: { 'X-Share-Token': token } }).then(r => r.data),
+    toggleChecklistWithToken: (pid, id, token) => api.patch(`/travel-plans/${pid}/checklist/${id}/toggle`, {}, { headers: { 'X-Share-Token': token } }).then(r => r.data),
+
     createShareToken: (pid, accessType) =>
         api.post(`/travel-plans/${pid}/share`, { accessType }).then(r => r.data),
     getByToken: (token) => api.get(`/shared/${token}`).then(r => r.data),

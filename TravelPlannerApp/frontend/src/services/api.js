@@ -18,8 +18,11 @@ const addInterceptors = (instance) => {
         res => res,
         err => {
             if (err.response?.status === 401) {
-                localStorage.removeItem('token');
-                window.location.href = '/login';
+                const url = err.config?.url || '';
+                if (!url.includes('/auth/login') && !url.includes('/auth/register')) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                }
             }
             return Promise.reject(err);
         }

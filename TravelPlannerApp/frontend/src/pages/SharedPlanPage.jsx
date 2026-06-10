@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import travelPlanService from '../services/travelPlanService';
 
 const STATUS_LABELS = { Planned: { label: 'Planirano', color: '#1565C0', bg: '#e3f2fd' }, Reserved: { label: 'Rezervisano', color: '#6a1b9a', bg: '#f3e5f5' }, Completed: { label: 'Završeno', color: '#388e3c', bg: '#e8f5e9' }, Cancelled: { label: 'Otkazano', color: '#d32f2f', bg: '#ffebee' } };
-const CATEGORY_ICONS = { Transport: '✈️', Accommodation: '🏨', Food: '🍽️', Tickets: '🎫', Shopping: '🛍️', Other: '💳' };
+const CATEGORY_ICONS = { Transport: '', Accommodation: '', Food: '', Tickets: '', Shopping: '', Other: '' };
 const CATEGORY_LABELS = { Transport: 'Transport', Accommodation: 'Smještaj', Food: 'Hrana', Tickets: 'Ulaznice', Shopping: 'Shopping', Other: 'Ostalo' };
 
 export default function SharedPlanPage() {
@@ -24,10 +24,9 @@ export default function SharedPlanPage() {
     if (error) return (
         <div style={styles.centered}>
             <div style={styles.errorCard}>
-                <div style={styles.errorIcon}>🔒</div>
-                <h2>Link nije dostupan</h2>
-                <p style={{ color: '#666' }}>{error}</p>
-                <p style={{ color: '#888', fontSize: '13px' }}>Zatražite novi link od vlasnika plana.</p>
+                <h2 style={{ color: 'var(--text-h)', fontFamily: 'var(--serif)' }}>Link nije dostupan</h2>
+                <p style={{ color: 'var(--text)' }}>{error}</p>
+                <p style={{ color: 'var(--text)', fontSize: '13px' }}>Zatrazite novi link od vlasnika plana.</p>
             </div>
         </div>
     );
@@ -38,16 +37,16 @@ export default function SharedPlanPage() {
     const pct = plan.budget > 0 ? Math.min((spent / plan.budget) * 100, 100) : 0;
 
     const TABS = [
-        { id: 'overview', label: '📋 Pregled' }, { id: 'destinations', label: '📍 Destinacije' },
-        { id: 'activities', label: '🎯 Aktivnosti' }, { id: 'expenses', label: '💰 Troškovi' },
-        { id: 'checklist', label: '✅ Checklist' },
+        { id: 'overview', label: ' Pregled' }, { id: 'destinations', label: ' Destinacije' },
+        { id: 'activities', label: ' Aktivnosti' }, { id: 'expenses', label: ' Troškovi' },
+        { id: 'checklist', label: ' Checklist' },
     ];
 
     return (
         <div style={styles.container}>
             <div style={styles.header}>
                 <div>
-                    <div style={styles.sharedBadge}>{accessType === 'Edit' ? '✏️ Dijeljeni plan (uređivanje)' : '👁️ Dijeljeni plan (pregled)'}</div>
+                    <div style={styles.sharedBadge}>{accessType === 'Edit' ? '✏️ Dijeljeni plan (uređivanje)' : ' Dijeljeni plan (pregled)'}</div>
                     <h1 style={styles.title}>{plan.name}</h1>
                     <p style={styles.dates}>{new Date(plan.startDate).toLocaleDateString('bs-BA')} — {new Date(plan.endDate).toLocaleDateString('bs-BA')}</p>
                 </div>
@@ -66,8 +65,8 @@ export default function SharedPlanPage() {
                     <div style={styles.grid}>
                         <div style={styles.card}>
                             <h3 style={styles.cardTitle}>Informacije</h3>
-                            {plan.description && <p style={{ color: '#555', fontSize: '14px' }}>{plan.description}</p>}
-                            {plan.notes && <p style={{ color: '#777', fontSize: '13px', fontStyle: 'italic' }}>{plan.notes}</p>}
+                            {plan.description && <p style={{ color: 'var(--text-2)', fontSize: '14px' }}>{plan.description}</p>}
+                            {plan.notes && <p style={{ color: 'var(--text)', fontSize: '13px', fontStyle: 'italic' }}>{plan.notes}</p>}
                             <div style={styles.infoGrid}>
                                 <span style={styles.infoLabel}>Početak</span><span>{new Date(plan.startDate).toLocaleDateString('bs-BA')}</span>
                                 <span style={styles.infoLabel}>Kraj</span><span>{new Date(plan.endDate).toLocaleDateString('bs-BA')}</span>
@@ -76,13 +75,14 @@ export default function SharedPlanPage() {
                         </div>
                         <div style={styles.card}>
                             <h3 style={styles.cardTitle}>Budžet</h3>
-                            {[['Ukupni budžet', plan.budget?.toFixed(2) + ' €', '#333'], ['Potrošeno', spent.toFixed(2) + ' €', '#d32f2f'], ['Preostalo', remaining.toFixed(2) + ' €', remaining < 0 ? '#d32f2f' : '#388e3c']].map(([label, val, color]) => (
+                            {[['Ukupni budzet', plan.budget?.toFixed(2) + ' €', 'var(--text-h)'], ['Potroseno', spent.toFixed(2) + ' €', 'var(--red)'], ['Preostalo', remaining.toFixed(2) + ' €', remaining < 0 ? 'var(--red)' : 'var(--green-light)']].map(([label, val, color]) => (
                                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '8px' }}>
-                                    <span style={{ color: '#888' }}>{label}</span><span style={{ fontWeight: '600', color }}>{val}</span>
+                                    <span style={{ color: 'var(--text)' }}>{label}</span>
+                                    <span style={{ fontWeight: '600', color }}>{val}</span>
                                 </div>
                             ))}
-                            <div style={{ height: '8px', backgroundColor: '#e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${pct}%`, backgroundColor: pct > 100 ? '#d32f2f' : pct > 75 ? '#FF9800' : '#388e3c', borderRadius: '4px' }} />
+                            <div style={{ height: '6px', background: 'var(--border)', borderRadius: '99px', overflow: 'hidden' }}>
+                                <div style={{ height: '100%', width: `${pct}%`, background: pct > 100 ? 'var(--red)' : 'var(--green-mid)', borderRadius: '99px' }} />
                             </div>
                         </div>
                     </div>
@@ -95,7 +95,7 @@ export default function SharedPlanPage() {
                         {plan.destinations?.map((d, i) => (
                             <div key={d.id} style={{ ...styles.card, display: 'flex', gap: '16px', marginBottom: '12px' }}>
                                 <div style={styles.numBadge}>{i + 1}</div>
-                                <div><div style={{ fontWeight: '600', fontSize: '16px' }}>{d.name}</div>{d.location && <div style={{ color: '#666', fontSize: '13px' }}>📍 {d.location}</div>}<div style={{ color: '#555', fontSize: '13px' }}>{new Date(d.arrivalDate).toLocaleDateString('bs-BA')} — {new Date(d.departureDate).toLocaleDateString('bs-BA')}</div></div>
+                                <div><div style={{ fontWeight: '600', fontSize: '16px' }}>{d.name}</div>{d.location && <div style={{ color: '#666', fontSize: '13px' }}> {d.location}</div>}<div style={{ color: '#555', fontSize: '13px' }}>{new Date(d.arrivalDate).toLocaleDateString('bs-BA')} — {new Date(d.departureDate).toLocaleDateString('bs-BA')}</div></div>
                             </div>
                         ))}
                     </div>
@@ -111,9 +111,9 @@ export default function SharedPlanPage() {
                                 <div key={act.id} style={{ ...styles.card, display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                                     <div style={{ display: 'flex', gap: '12px' }}>
                                         <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: s.color, marginTop: '5px', flexShrink: 0 }} />
-                                        <div><div style={{ fontWeight: '600' }}>{act.name}</div><div style={{ fontSize: '13px', color: '#666' }}>📅 {new Date(act.date).toLocaleDateString('bs-BA')}{act.time && ` • 🕐 ${act.time}`}{act.location && ` • 📍 ${act.location}`}</div></div>
+                                        <div><div style={{ fontWeight: '600' }}>{act.name}</div><div style={{ fontSize: '13px', color: '#666' }}> {new Date(act.date).toLocaleDateString('bs-BA')}{act.time && ` •  ${act.time}`}{act.location && ` •  ${act.location}`}</div></div>
                                     </div>
-                                    <span style={{ padding: '3px 10px', borderRadius: '12px', fontSize: '12px', backgroundColor: s.bg, color: s.color, flexShrink: 0 }}>{s.label}</span>
+                                    <span style={{ padding: '2px 8px', borderRadius: '99px', fontSize: '11px', fontWeight: '500', background: 'transparent', color: s.color, border: `1px solid ${s.color}33`, flexShrink: 0 }}>{s.label}</span>
                                 </div>
                             );
                         })}
@@ -127,7 +127,7 @@ export default function SharedPlanPage() {
                         {plan.expenses?.map(exp => (
                             <div key={exp.id} style={{ ...styles.card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                                 <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                                    <span style={{ fontSize: '24px' }}>{CATEGORY_ICONS[exp.category] || '💳'}</span>
+                                    <span style={{ fontSize: '24px' }}>{CATEGORY_ICONS[exp.category] || ''}</span>
                                     <div><div style={{ fontWeight: '600' }}>{exp.name}</div><div style={{ fontSize: '13px', color: '#888' }}>{CATEGORY_LABELS[exp.category]} • {new Date(exp.date).toLocaleDateString('bs-BA')}</div></div>
                                 </div>
                                 <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{exp.amount?.toFixed(2)} €</span>
@@ -138,12 +138,12 @@ export default function SharedPlanPage() {
 
                 {tab === 'checklist' && (
                     <div>
-                        <h3 style={styles.sectionTitle}>Checklist ({plan.checklistItems?.filter(c => c.isCompleted).length || 0}/{plan.checklistItems?.length || 0} završeno)</h3>
+                        <h3 style={styles.sectionTitle}>Liste ({plan.checklistItems?.filter(c => c.isCompleted).length || 0}/{plan.checklistItems?.length || 0} završeno)</h3>
                         {(!plan.checklistItems?.length) && <div style={styles.empty}>Nema stavki.</div>}
                         {plan.checklistItems?.map(item => (
                             <div key={item.id} style={{ ...styles.card, display: 'flex', alignItems: 'center', gap: '14px', opacity: item.isCompleted ? 0.7 : 1, marginBottom: '8px' }}>
-                                <span style={{ fontSize: '18px' }}>{item.isCompleted ? '✅' : '⬜'}</span>
-                                <span style={{ fontSize: '15px', textDecoration: item.isCompleted ? 'line-through' : 'none', color: item.isCompleted ? '#888' : '#333' }}>{item.text}</span>
+                                <span style={{ fontSize: '18px' }}>{item.isCompleted ? '' : '⬜'}</span>
+                                <span style={{ fontSize: '15px', textDecoration: item.isCompleted ? 'line-through' : 'none', color: item.isCompleted ? 'var(--text)' : 'var(--text-h)' }}>{item.text}</span>
                             </div>
                         ))}
                     </div>
@@ -154,28 +154,28 @@ export default function SharedPlanPage() {
 }
 
 const styles = {
-    container: { minHeight: '100vh', backgroundColor: '#f5f5f5' },
-    centered: { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' },
-    errorCard: { textAlign: 'center', backgroundColor: 'white', padding: '48px', borderRadius: '12px', boxShadow: '0 2px 20px rgba(0,0,0,0.1)', maxWidth: '400px' },
+    container: { minHeight: '100svh', background: 'var(--bg)' },
+    centered: { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100svh', background: 'var(--bg)' },
+    errorCard: { textAlign: 'center', background: 'var(--bg-card)', border: '1px solid var(--border)', padding: '48px', borderRadius: 'var(--radius-lg)', maxWidth: '400px' },
     errorIcon: { fontSize: '48px', marginBottom: '16px' },
-    header: { backgroundColor: '#1565C0', color: 'white', padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' },
-    sharedBadge: { display: 'inline-block', backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '12px', fontSize: '12px', marginBottom: '8px' },
-    title: { margin: 0, fontSize: '24px' },
-    dates: { margin: '4px 0 0 0', fontSize: '14px', opacity: 0.85 },
-    headerBudget: { display: 'flex', gap: '24px' },
-    budgetItem: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
-    budgetLabel: { fontSize: '11px', opacity: 0.8, textTransform: 'uppercase' },
-    budgetVal: { fontSize: '18px', fontWeight: 'bold', color: 'white' },
-    tabBar: { backgroundColor: 'white', borderBottom: '1px solid #e0e0e0', display: 'flex', overflowX: 'auto', padding: '0 16px' },
-    tabBtn: { padding: '14px 20px', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', fontSize: '14px', color: '#666', borderBottom: '3px solid transparent', whiteSpace: 'nowrap' },
-    tabActive: { color: '#1565C0', borderBottom: '3px solid #1565C0', fontWeight: '600' },
-    content: { padding: '24px 32px' },
+    header: { background: 'var(--bg-2)', borderBottom: '1px solid var(--border)', padding: '32px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' },
+    sharedBadge: { display: 'inline-block', background: 'var(--green-glow)', border: '1px solid rgba(64,145,108,0.35)', color: 'var(--green-light)', padding: '4px 12px', borderRadius: '99px', fontSize: '12px', marginBottom: '10px' },
+    title: { margin: 0, fontSize: '32px', fontFamily: 'var(--serif)', fontWeight: 600, color: 'var(--text-h)', letterSpacing: '-0.5px' },
+    dates: { margin: '6px 0 0 0', fontSize: '14px', color: 'var(--text)' },
+    headerBudget: { display: 'flex', gap: '28px' },
+    budgetItem: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' },
+    budgetLabel: { fontSize: '11px', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    budgetVal: { fontSize: '20px', fontWeight: '600', color: 'var(--text-h)', fontFamily: 'var(--sans)' },
+    tabBar: { background: 'var(--bg-2)', borderBottom: '1px solid var(--border)', display: 'flex', overflowX: 'auto', padding: '0 40px' },
+    tabBtn: { padding: '14px 18px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '14px', color: 'var(--text)', borderBottom: '2px solid transparent', whiteSpace: 'nowrap', fontFamily: 'var(--sans)', marginBottom: '-1px' },
+    tabActive: { color: 'var(--green-light)', borderBottomColor: 'var(--green-light)' },
+    content: { padding: '32px 40px', maxWidth: '1100px', margin: '0 auto' },
     grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' },
-    card: { backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' },
-    cardTitle: { margin: '0 0 14px 0', color: '#1565C0', fontSize: '15px', borderBottom: '1px solid #e8f0fe', paddingBottom: '8px' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '20px' },
+    cardTitle: { margin: '0 0 14px 0', color: 'var(--green-light)', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.8px', borderBottom: '1px solid var(--border)', paddingBottom: '10px', fontFamily: 'var(--sans)' },
     infoGrid: { display: 'grid', gridTemplateColumns: '120px 1fr', gap: '8px', fontSize: '14px', marginTop: '12px' },
-    infoLabel: { color: '#888', fontWeight: '500' },
-    sectionTitle: { margin: '0 0 16px 0', color: '#333', fontSize: '18px' },
-    numBadge: { width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1565C0', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '13px', flexShrink: 0 },
-    empty: { textAlign: 'center', padding: '40px', color: '#888', backgroundColor: 'white', borderRadius: '8px' },
+    infoLabel: { color: 'var(--text)', fontWeight: '500' },
+    sectionTitle: { margin: '0 0 16px 0', color: 'var(--text-h)', fontSize: '18px', fontFamily: 'var(--serif)' },
+    numBadge: { width: '28px', height: '28px', borderRadius: '50%', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '13px', flexShrink: 0 },
+    empty: { textAlign: 'center', padding: '40px', color: 'var(--text)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' },
 };

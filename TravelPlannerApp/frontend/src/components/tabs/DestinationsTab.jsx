@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
+import editIcon from '../../assets/edit.png';
+import deleteIcon from '../../assets/delete.png';
+import locationIcon from '../../assets/location.webp';
 
 const emptyForm = { name: '', location: '', arrivalDate: '', departureDate: '', description: '' };
 
-export default function DestinationsTab({ planId, onRefresh }) {
+export default function DestinationsTab({ planId, onRefresh, plan }) {
     const [destinations, setDestinations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -34,7 +37,13 @@ export default function DestinationsTab({ planId, onRefresh }) {
         if (!form.departureDate) errs.departureDate = 'Datum odlaska je obavezan';
         if (form.arrivalDate && form.departureDate &&
             new Date(form.departureDate) < new Date(form.arrivalDate))
-            errs.departureDate = 'Datum odlaska ne može biti prije dolaska';
+            errs.departureDate = 'Datum odlaska ne može biti pre dolaska';
+        if (plan && form.arrivalDate && new Date(form.arrivalDate) < new Date(plan.startDate))
+            errs.arrivalDate = 'Datum dolaska ne može biti pre početka plana';
+        if (plan && form.arrivalDate && new Date(form.arrivalDate) > new Date(plan.endDate)) 
+            errs.arrivalDate = 'Datum dolaska ne može biti nakon završetka plana';
+        if (plan && form.departureDate && new Date(form.departureDate) > new Date(plan.endDate))
+            errs.departureDate = 'Datum odlaska ne može biti nakon završetka plana';
         return errs;
     };
 
@@ -146,7 +155,10 @@ export default function DestinationsTab({ planId, onRefresh }) {
                             <div style={styles.numBadge}>{i + 1}</div>
                             <div>
                                 <div style={styles.destName}>{dest.name}</div>
-                                {dest.location && <div style={styles.destLocation}>📍 {dest.location}</div>}
+                                {dest.location && <div style={styles.destLocation}>
+                                    <img src={locationIcon} alt="Lokacija" style={{ width: '12px', height: '12px', objectFit: 'contain', marginRight: '5px' }} />
+                                    {dest.location}
+                                </div>}
                                 <div style={styles.destDates}>
                                     {new Date(dest.arrivalDate).toLocaleDateString('bs-BA')} —{' '}
                                     {new Date(dest.departureDate).toLocaleDateString('bs-BA')}
@@ -158,8 +170,12 @@ export default function DestinationsTab({ planId, onRefresh }) {
                             </div>
                         </div>
                         <div style={styles.cardActions}>
-                            <button style={styles.editBtn} onClick={() => openEdit(dest)}>✏️ Uredi</button>
-                            <button style={styles.deleteBtn} onClick={() => handleDelete(dest.id)}>🗑️</button>
+                            <button style={styles.editBtn} onClick={() => openEdit(dest)}>
+                                <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                            </button>
+                            <button style={styles.deleteBtn} onClick={() => handleDelete(dest.id)}>
+                                <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -170,31 +186,31 @@ export default function DestinationsTab({ planId, onRefresh }) {
 
 const styles = {
     topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
-    sectionTitle: { margin: 0, color: '#333', fontSize: '18px' },
-    addBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    formCard: { backgroundColor: 'white', borderRadius: '8px', padding: '24px', marginBottom: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' },
-    formTitle: { margin: '0 0 16px 0', color: '#1565C0' },
+    sectionTitle: { margin: 0, color: 'var(--text-h)', fontSize: '18px', fontFamily: 'var(--serif)' },
+    addBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
+    formCard: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', marginBottom: '20px' },
+    formTitle: { margin: '0 0 16px 0', color: 'var(--green-light)', fontSize: '14px', fontWeight: '600', fontFamily: 'var(--sans)' },
     formRow: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
     field: { marginBottom: '12px', display: 'flex', flexDirection: 'column', gap: '4px' },
-    label: { fontSize: '13px', color: '#555', fontWeight: '500' },
-    input: { padding: '9px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px' },
-    textarea: { padding: '9px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px', minHeight: '70px', resize: 'vertical' },
-    error: { color: '#d32f2f', fontSize: '12px' },
-    apiError: { backgroundColor: '#ffebee', color: '#d32f2f', padding: '10px', borderRadius: '4px', marginBottom: '12px', fontSize: '13px' },
+    label: { fontSize: '12px', color: 'var(--text-2)', fontWeight: '500', letterSpacing: '0.2px' },
+    input: { padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', boxSizing: 'border-box' },
+    textarea: { padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', minHeight: '70px', resize: 'vertical', boxSizing: 'border-box' },
+    error: { color: 'var(--red)', fontSize: '12px' },
+    apiError: { background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '12px', fontSize: '13px' },
     formBtns: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
-    cancelBtn: { padding: '8px 20px', backgroundColor: 'white', color: '#666', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' },
-    saveBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    empty: { textAlign: 'center', padding: '40px', color: '#888', backgroundColor: 'white', borderRadius: '8px' },
+    cancelBtn: { padding: '8px 18px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    saveBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    empty: { textAlign: 'center', padding: '40px', color: 'var(--text)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' },
     list: { display: 'flex', flexDirection: 'column', gap: '12px' },
-    card: { backgroundColor: 'white', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', transition: 'border-color 0.2s' },
     cardLeft: { display: 'flex', gap: '16px', alignItems: 'flex-start' },
-    numBadge: { width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#1565C0', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 },
-    destName: { fontSize: '16px', fontWeight: '600', marginBottom: '4px' },
-    destLocation: { fontSize: '13px', color: '#666', marginBottom: '4px' },
-    destDates: { fontSize: '13px', color: '#555' },
-    nights: { marginLeft: '6px', color: '#888', fontStyle: 'italic' },
-    destDesc: { fontSize: '13px', color: '#777', marginTop: '6px', margin: '6px 0 0 0' },
+    numBadge: { width: '32px', height: '32px', borderRadius: '50%', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0, fontSize: '13px' },
+    destName: { fontSize: '19px', fontWeight: '600', color: 'var(--text-h)', marginBottom: '4px' },
+    destLocation: { fontSize: '13px', color: 'var(--text)', marginBottom: '4px' },
+    destDates: { fontSize: '13px', color: 'var(--text-2)' },
+    nights: { marginLeft: '6px', color: 'var(--text)', fontStyle: 'italic' },
+    destDesc: { fontSize: '13px', color: 'var(--text)', marginTop: '6px', margin: '6px 0 0 0' },
     cardActions: { display: 'flex', gap: '8px', flexShrink: 0 },
-    editBtn: { padding: '6px 14px', backgroundColor: '#e3f2fd', color: '#1565C0', border: '1px solid #bbdefb', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
-    deleteBtn: { padding: '6px 10px', backgroundColor: '#ffebee', color: '#d32f2f', border: '1px solid #ffcdd2', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
+    editBtn: { padding: '6px 14px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)' },
+    deleteBtn: { padding: '6px 12px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)' },
 };

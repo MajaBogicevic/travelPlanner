@@ -55,7 +55,7 @@ export default function AdminPage() {
             <div style={styles.content}>
                 {error && <div style={styles.errorBox}>{error}</div>}
                 <div style={styles.searchBar}>
-                    <input style={styles.searchInput} value={search} onChange={e => setSearch(e.target.value)} placeholder='🔍 Pretraži po imenu ili emailu...' />
+                    <input style={styles.searchInput} value={search} onChange={e => setSearch(e.target.value)} placeholder=' Pretraži po imenu ili emailu...' />
                     {search && <span style={styles.searchCount}>{filtered.length} od {users.length} korisnika</span>}
                 </div>
 

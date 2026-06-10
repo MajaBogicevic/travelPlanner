@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
+import clockIcon from '../../assets/clock.webp';
+import locationIcon from '../../assets/location.webp';
 
 export default function MapTab({ planId }) {
     const [activities, setActivities] = useState([]);
@@ -60,7 +62,7 @@ export default function MapTab({ planId }) {
 
         const numberedIcon = (n) => L.divIcon({
             className: '',
-            html: `<div style="background:#1565C0;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.4);border:2px solid white;">${n}</div>`,
+            html: `<div style="background:#40916c;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.4);border:2px solid white;">${n}</div>`,
             iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -20],
         });
 
@@ -82,7 +84,7 @@ export default function MapTab({ planId }) {
 
     if (activities.length === 0) return (
         <div style={styles.empty}>
-            <div style={styles.emptyIcon}>🗺️</div>
+            <div style={styles.emptyIcon}></div>
             <h3>Nema aktivnosti na mapi</h3>
             <p>Da biste vidjeli rutu putovanja, dodajte aktivnosti sa lokacijom (koristite pretragu lokacije u tabu "Aktivnosti").</p>
         </div>
@@ -100,9 +102,15 @@ export default function MapTab({ planId }) {
                         <div>
                             <div style={styles.locName}>{act.name}</div>
                             <div style={styles.locMeta}>
-                                {act.location && <span>📍 {act.location} • </span>}
-                                <span>📅 {new Date(act.date).toLocaleDateString('bs-BA')}</span>
-                                {act.time && <span> • 🕐 {act.time}</span>}
+                                {act.location && <span> 
+                                     <img src={locationIcon} alt="Lokacija" style={{ width: '12px', height: '12px', objectFit: 'contain', marginRight: '8px', marginTop: '10px' }} />
+                                     {act.location}  
+                                 </span>}
+                                <span>  
+                                    <img src={clockIcon} alt="Izmeni" style={{ width: '12px', height: '12px', objectFit: 'contain', marginRight: '8px', marginLeft: '15px' }} />
+                                    {new Date(act.date).toLocaleDateString('bs-BA')}
+                                </span>
+                                {act.time && <span> • {act.time}</span>}
                             </div>
                         </div>
                     </div>
@@ -117,15 +125,15 @@ export default function MapTab({ planId }) {
 
 const styles = {
     topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
-    sectionTitle: { margin: 0, color: '#333', fontSize: '18px' },
-    empty: { textAlign: 'center', padding: '60px 20px', color: '#888', backgroundColor: 'white', borderRadius: '8px' },
+    sectionTitle: { margin: 0, color: 'var(--text-h)', fontSize: '18px', fontFamily: 'var(--serif)' },
+    empty: { textAlign: 'center', padding: '60px 20px', color: 'var(--text)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' },
     emptyIcon: { fontSize: '48px', marginBottom: '16px' },
-    locationList: { backgroundColor: 'white', borderRadius: '8px', padding: '16px 20px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', display: 'flex', gap: '8px', flexWrap: 'wrap' },
+    locationList: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px 20px', marginBottom: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' },
     locItem: { display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '8px', minWidth: '200px' },
-    locNum: { width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1565C0', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '13px', flexShrink: 0 },
-    locName: { fontSize: '14px', fontWeight: '600' },
-    locMeta: { fontSize: '12px', color: '#888', marginTop: '2px' },
-    mapContainer: { width: '100%', height: '480px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' },
-    mapLoading: { width: '100%', height: '480px', backgroundColor: '#f5f5f5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' },
-    mapError: { padding: '16px', backgroundColor: '#ffebee', color: '#d32f2f', borderRadius: '8px', marginBottom: '16px' },
+    locNum: { width: '28px', height: '28px', borderRadius: '50%', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '13px', flexShrink: 0 },
+    locName: { fontSize: '14px', fontWeight: '600', color: 'var(--text-h)' },
+    locMeta: { fontSize: '12px', color: 'var(--text)', marginTop: '2px' },
+    mapContainer: { width: '100%', height: '480px', borderRadius: 'var(--radius-md)', overflow: 'hidden' },
+    mapLoading: { width: '100%', height: '480px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)' },
+    mapError: { padding: '16px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', marginBottom: '16px' },
 };

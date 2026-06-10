@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import authService from '../services/authService';
+import logoIcon from '../assets/logoTravelApp.png';
 
 export default function RegisterPage() {
     const { login } = useAuth();
@@ -15,6 +16,7 @@ export default function RegisterPage() {
     const handleChange = (e) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setErrors(prev => ({ ...prev, [e.target.name]: null }));
+        setApiError(null);
     };
 
     const validate = () => {
@@ -23,8 +25,7 @@ export default function RegisterPage() {
         if (!form.email.trim()) errs.email = 'Email je obavezan';
         if (!form.password) errs.password = 'Lozinka je obavezna';
         if (form.password.length < 6) errs.password = 'Lozinka mora imati najmanje 6 karaktera';
-        if (form.password !== form.confirmPassword)
-            errs.confirmPassword = 'Lozinke se ne poklapaju';
+        if (form.password !== form.confirmPassword) errs.confirmPassword = 'Lozinke se ne poklapaju';
         return errs;
     };
 
@@ -46,74 +47,231 @@ export default function RegisterPage() {
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.card}>
-                <h2 style={styles.title}>Registracija</h2>
-                <form onSubmit={handleSubmit}>
-                    <div style={styles.field}>
-                        <label>Ime i prezime</label>
-                        <input style={styles.input} name='name' value={form.name}
-                            onChange={handleChange} placeholder='Vaše ime' />
-                        {errors.name && <span style={styles.error}>{errors.name}</span>}
+        <div style={s.root}>
+
+            <div style={s.formSide}>
+                <div style={s.formBox}>
+
+                    <div style={s.logoWrap}>
+                        <img src={logoIcon} alt="Travel App" style={s.logoIcon} />
                     </div>
-                    <div style={styles.field}>
-                        <label>Email</label>
-                        <input style={styles.input} name='email' type='email' value={form.email}
-                            onChange={handleChange} placeholder='email@example.com' />
-                        {errors.email && <span style={styles.error}>{errors.email}</span>}
+
+                    <div style={s.formHeader}>
+                        <h2 style={s.formTitle}>Kreirajte nalog</h2>
+                        <p style={s.formSub}>Registrujte se i počnite sa planiranjem</p>
                     </div>
-                    <div style={styles.field}>
-                        <label>Lozinka</label>
-                        <input style={styles.input} name='password' type='password' value={form.password}
-                            onChange={handleChange} placeholder='Minimum 6 karaktera' />
-                        {errors.password && <span style={styles.error}>{errors.password}</span>}
-                    </div>
-                    <div style={styles.field}>
-                        <label>Potvrdi lozinku</label>
-                        <input style={styles.input} name='confirmPassword' type='password'
-                            value={form.confirmPassword} onChange={handleChange}
-                            placeholder='Ponovite lozinku' />
-                        {errors.confirmPassword && <span style={styles.error}>{errors.confirmPassword}</span>}
-                    </div>
-                    {apiError && <div style={styles.apiError}>{apiError}</div>}
-                    <button style={styles.button} type='submit' disabled={submitting}>
-                        {submitting ? 'Registracija...' : 'Registruj se'}
-                    </button>
-                </form>
-                <p style={styles.link}>
-                    Već imate nalog? <Link to='/login'>Prijavite se</Link>
-                </p>
+
+                    <form onSubmit={handleSubmit} autoComplete="off" style={s.form}>
+                        <div style={s.field}>
+                            <label style={s.label}>Ime i prezime</label>
+                            <input
+                                style={s.input}
+                                name="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                placeholder="Vaše ime"
+                            />
+                            {errors.name && <span style={s.fieldError}>{errors.name}</span>}
+                        </div>
+
+                        <div style={s.field}>
+                            <label style={s.label}>Email adresa</label>
+                            <input
+                                style={s.input}
+                                name="email"
+                                type="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                placeholder="email@primer.com"
+                            />
+                            {errors.email && <span style={s.fieldError}>{errors.email}</span>}
+                        </div>
+
+                        <div style={s.field}>
+                            <label style={s.label}>Lozinka</label>
+                            <input
+                                style={s.input}
+                                name="password"
+                                type="password"
+                                value={form.password}
+                                onChange={handleChange}
+                                placeholder="Minimum 6 karaktera"
+                            />
+                            {errors.password && <span style={s.fieldError}>{errors.password}</span>}
+                        </div>
+
+                        <div style={s.field}>
+                            <label style={s.label}>Potvrdi lozinku</label>
+                            <input
+                                style={s.input}
+                                name="confirmPassword"
+                                type="password"
+                                value={form.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="Ponovite lozinku"
+                            />
+                            {errors.confirmPassword && <span style={s.fieldError}>{errors.confirmPassword}</span>}
+                        </div>
+
+                        {apiError && (
+                            <div style={s.errorBox}>
+                                <span>⚠</span> {apiError}
+                            </div>
+                        )}
+
+                        <button
+                            style={{ ...s.submitBtn, opacity: submitting ? 0.7 : 1 }}
+                            type="submit"
+                            disabled={submitting}
+                        >
+                            {submitting ? 'Registracija...' : 'Registruj se →'}
+                        </button>
+                    </form>
+
+                    <p style={s.loginLink}>
+                        Već imate nalog?{' '}
+                        <Link to="/login" style={s.link}>Prijavite se</Link>
+                    </p>
+                </div>
             </div>
+
+            <div style={s.hero}>
+                <div style={s.heroOverlay} />
+            </div>
+
         </div>
     );
 }
 
-const styles = {
-    container: {
-        display: 'flex', justifyContent: 'center',
-        alignItems: 'center', minHeight: '100vh',
-        backgroundColor: '#f5f5f5'
+const HERO_IMG = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80';
+
+const s = {
+    root: {
+        display: 'flex',
+        minHeight: '100svh',
+        background: 'var(--bg)',
     },
-    card: {
-        backgroundColor: 'white', padding: '40px',
-        borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        width: '100%', maxWidth: '400px'
+
+    formSide: {
+        flexShrink: 0,
+        width: '600px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '48px 40px',
+        background: 'var(--bg-2)',
+        borderRight: '1px solid var(--border)',
     },
-    title: { textAlign: 'center', marginBottom: '24px', color: '#1565C0' },
-    field: { marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '4px' },
+    formBox: {
+        width: '100%',
+        maxWidth: '420px',
+    },
+    logoWrap: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '32px',
+    },
+    logoIcon: {
+        width: '150px',
+        height: '150px',
+        objectFit: 'contain',
+    },
+    formHeader: {
+        marginBottom: '28px',
+        textAlign: 'center',
+    },
+    formTitle: {
+        fontFamily: 'var(--serif)',
+        fontSize: '28px',
+        fontWeight: 500,
+        color: 'var(--text-h)',
+        marginBottom: '8px',
+    },
+    formSub: {
+        color: 'var(--text)',
+        fontSize: '14px',
+    },
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+    },
+    field: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+    },
+    label: {
+        fontSize: '13px',
+        fontWeight: 500,
+        color: 'var(--text-2)',
+        letterSpacing: '0.2px',
+    },
     input: {
-        padding: '10px', borderRadius: '4px',
-        border: '1px solid #ccc', fontSize: '14px'
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-sm)',
+        color: 'var(--text-h)',
+        padding: '12px 16px',
+        fontSize: '14px',
+        width: '100%',
+        outline: 'none',
+        transition: 'border-color 0.2s, box-shadow 0.2s',
+        boxSizing: 'border-box',
     },
-    error: { color: '#d32f2f', fontSize: '12px' },
-    apiError: {
-        backgroundColor: '#ffebee', color: '#d32f2f',
-        padding: '10px', borderRadius: '4px', marginBottom: '16px'
+    fieldError: {
+        fontSize: '12px',
+        color: 'var(--red)',
     },
-    button: {
-        width: '100%', padding: '12px', backgroundColor: '#1565C0',
-        color: 'white', border: 'none', borderRadius: '4px',
-        fontSize: '16px', cursor: 'pointer'
+    errorBox: {
+        background: 'var(--red-bg)',
+        border: '1px solid rgba(224,92,92,0.3)',
+        color: 'var(--red)',
+        borderRadius: 'var(--radius-sm)',
+        padding: '11px 14px',
+        fontSize: '13px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
     },
-    link: { textAlign: 'center', marginTop: '16px' }
+    submitBtn: {
+        marginTop: '4px',
+        width: '100%',
+        padding: '14px',
+        background: 'var(--green-dark)',
+        border: '1px solid var(--green)',
+        color: 'var(--green-pale)',
+        borderRadius: 'var(--radius-sm)',
+        fontSize: '15px',
+        fontWeight: 500,
+        cursor: 'pointer',
+        transition: 'background 0.2s, color 0.2s',
+        fontFamily: 'var(--sans)',
+        letterSpacing: '0.2px',
+    },
+    loginLink: {
+        textAlign: 'center',
+        marginTop: '28px',
+        fontSize: '14px',
+        color: 'var(--text)',
+    },
+    link: {
+        color: 'var(--green-light)',
+        fontWeight: 500,
+    },
+
+    hero: {
+        flex: '1 1 0',
+        position: 'relative',
+        backgroundImage: `url(${HERO_IMG})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
+    heroOverlay: {
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(160deg,rgba(8,22,13,0.4) 0%,rgba(8,22,13,0.1) 50%,rgba(8,22,13,0.4) 100%)',
+    },
 };

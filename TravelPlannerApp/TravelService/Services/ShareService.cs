@@ -41,7 +41,9 @@ namespace TravelService.Services
             return new ShareResponseDto
             {
                 Token = token,
-                ShareUrl = $"http://localhost:5173/shared/{token}",
+                ShareUrl = dto.AccessType == "Edit"
+                    ? $"http://localhost:5173/shared/{token}/edit"
+                    : $"http://localhost:5173/shared/{token}",
                 AccessType = dto.AccessType
             };
         }

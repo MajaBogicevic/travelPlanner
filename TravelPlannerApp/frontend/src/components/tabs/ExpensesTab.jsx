@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
+import editIcon from '../../assets/edit.png';
+import deleteIcon from '../../assets/delete.png';
 
 const CATEGORIES = ['Transport', 'Accommodation', 'Food', 'Tickets', 'Shopping', 'Other'];
-const CATEGORY_ICONS = { Transport: '✈️', Accommodation: '🏨', Food: '🍽️', Tickets: '🎫', Shopping: '🛍️', Other: '💳' };
+const CATEGORY_ICONS = { Transport: '', Accommodation: '', Food: '', Tickets: '', Shopping: '', Other: '' };
 const CATEGORY_LABELS = { Transport: 'Transport', Accommodation: 'Smještaj', Food: 'Hrana', Tickets: 'Ulaznice', Shopping: 'Shopping', Other: 'Ostalo' };
 
 const emptyForm = { name: '', category: 'Transport', amount: '', date: '', description: '' };
 
-export default function ExpensesTab({ planId, budget, onRefresh }) {
+export default function ExpensesTab({ planId, budget, onRefresh, plan }) {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -47,6 +49,10 @@ export default function ExpensesTab({ planId, budget, onRefresh }) {
         if (!form.name.trim()) errs.name = 'Naziv je obavezan';
         if (!form.amount || Number(form.amount) <= 0) errs.amount = 'Iznos mora biti pozitivan';
         if (!form.date) errs.date = 'Datum je obavezan';
+        if (plan && form.date && new Date(form.date) < new Date(plan.startDate))
+            errs.date = 'Datum ne moze biti pre pocetka plana';
+        if (plan && form.date && new Date(form.date) > new Date(plan.endDate))
+            errs.date = 'Datum ne moze biti nakon zavrsetka plana';
         return errs;
     };
 
@@ -171,7 +177,7 @@ export default function ExpensesTab({ planId, budget, onRefresh }) {
                 {filtered.map(exp => (
                     <div key={exp.id} style={styles.card}>
                         <div style={styles.cardLeft}>
-                            <div style={styles.catIcon}>{CATEGORY_ICONS[exp.category] || '💳'}</div>
+                            <div style={styles.catIcon}>{CATEGORY_ICONS[exp.category] || ''}</div>
                             <div>
                                 <div style={styles.expName}>{exp.name}</div>
                                 <div style={styles.expMeta}>{CATEGORY_LABELS[exp.category] || exp.category} • {new Date(exp.date).toLocaleDateString('bs-BA')}{exp.description && ` • ${exp.description}`}</div>
@@ -180,8 +186,12 @@ export default function ExpensesTab({ planId, budget, onRefresh }) {
                         <div style={styles.cardRight}>
                             <span style={styles.amount}>{exp.amount?.toFixed(2)} €</span>
                             <div style={styles.cardActions}>
-                                <button style={styles.editBtn} onClick={() => openEdit(exp)}>✏️</button>
-                                <button style={styles.deleteBtn} onClick={() => handleDelete(exp.id)}>🗑️</button>
+                                <button style={styles.editBtn} onClick={() => openEdit(exp)}>
+                                     <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                </button>
+                                <button style={styles.deleteBtn} onClick={() => handleDelete(exp.id)}>
+                                      <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -193,43 +203,43 @@ export default function ExpensesTab({ planId, budget, onRefresh }) {
 
 const styles = {
     topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' },
-    sectionTitle: { margin: 0, color: '#333', fontSize: '18px' },
-    addBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
-    budgetCard: { backgroundColor: 'white', borderRadius: '8px', padding: '20px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' },
+    sectionTitle: { margin: 0, color: 'var(--text-h)', fontSize: '18px', fontFamily: 'var(--serif)' },
+    addBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--sans)' },
+    budgetCard: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '20px', marginBottom: '16px' },
     budgetRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '12px' },
     budgetItem: { display: 'flex', flexDirection: 'column', gap: '2px' },
-    budgetLabel: { fontSize: '12px', color: '#888', textTransform: 'uppercase' },
-    budgetVal: { fontSize: '20px', fontWeight: 'bold', color: '#333' },
-    progressTrack: { height: '10px', backgroundColor: '#e0e0e0', borderRadius: '5px', overflow: 'hidden' },
-    progressFill: { height: '100%', borderRadius: '5px', transition: 'width 0.4s ease' },
-    pctLabel: { fontSize: '12px', color: '#888', marginTop: '4px' },
-    overWarning: { marginTop: '10px', padding: '8px 12px', backgroundColor: '#ffebee', color: '#d32f2f', borderRadius: '4px', fontSize: '13px' },
-    catBreakdown: { display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px', borderTop: '1px solid #f0f0f0', paddingTop: '12px' },
-    catItem: { display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '6px 12px', backgroundColor: '#f5f5f5', borderRadius: '4px', fontSize: '13px', minWidth: '160px' },
-    formCard: { backgroundColor: 'white', borderRadius: '8px', padding: '24px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' },
-    formTitle: { margin: '0 0 16px 0', color: '#1565C0' },
+    budgetLabel: { fontSize: '11px', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    budgetVal: { fontSize: '20px', fontWeight: 'bold', color: 'var(--text-h)', fontFamily: 'var(--sans)' },
+    progressTrack: { height: '6px', background: 'var(--border)', borderRadius: '99px', overflow: 'hidden' },
+    progressFill: { height: '100%', borderRadius: '99px', transition: 'width 0.4s ease' },
+    pctLabel: { fontSize: '12px', color: 'var(--text)', marginTop: '6px' },
+    overWarning: { marginTop: '10px', padding: '10px 14px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', fontSize: '13px' },
+    catBreakdown: { display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px', borderTop: '1px solid var(--border)', paddingTop: '12px' },
+    catItem: { display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '6px 12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: '13px', minWidth: '160px', color: 'var(--text-2)' },
+    formCard: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', marginBottom: '16px' },
+    formTitle: { margin: '0 0 16px 0', color: 'var(--green-light)', fontSize: '14px', fontWeight: '600', fontFamily: 'var(--sans)' },
     formRow: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
     field: { marginBottom: '12px', display: 'flex', flexDirection: 'column', gap: '4px' },
-    label: { fontSize: '13px', color: '#555', fontWeight: '500' },
-    input: { padding: '9px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px' },
-    error: { color: '#d32f2f', fontSize: '12px' },
-    apiError: { backgroundColor: '#ffebee', color: '#d32f2f', padding: '10px', borderRadius: '4px', marginBottom: '12px', fontSize: '13px' },
+    label: { fontSize: '12px', color: 'var(--text-2)', fontWeight: '500', letterSpacing: '0.2px' },
+    input: { padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '14px', background: 'var(--bg)', color: 'var(--text-h)', fontFamily: 'var(--sans)', outline: 'none', boxSizing: 'border-box', width: '100%' },
+    error: { color: 'var(--red)', fontSize: '12px' },
+    apiError: { background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '12px', fontSize: '13px' },
     formBtns: { display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' },
-    cancelBtn: { padding: '8px 20px', backgroundColor: 'white', color: '#666', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' },
-    saveBtn: { padding: '8px 20px', backgroundColor: '#1565C0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' },
+    cancelBtn: { padding: '8px 18px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
+    saveBtn: { padding: '8px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: '13px' },
     filterRow: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' },
-    filterBtn: { padding: '6px 14px', backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '20px', cursor: 'pointer', fontSize: '13px', color: '#555' },
-    filterActive: { backgroundColor: '#1565C0', color: 'white', borderColor: '#1565C0' },
-    empty: { textAlign: 'center', padding: '40px', color: '#888', backgroundColor: 'white', borderRadius: '8px' },
+    filterBtn: { padding: '6px 14px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '99px', cursor: 'pointer', fontSize: '12px', color: 'var(--text)', fontFamily: 'var(--sans)' },
+    filterActive: { background: 'var(--green-dark)', color: 'var(--green-pale)', borderColor: 'var(--green)' },
+    empty: { textAlign: 'center', padding: '40px', color: 'var(--text)', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' },
     list: { display: 'flex', flexDirection: 'column', gap: '10px' },
-    card: { backgroundColor: 'white', borderRadius: '8px', padding: '16px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    card: { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
     cardLeft: { display: 'flex', gap: '14px', alignItems: 'center' },
     cardRight: { display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 },
-    catIcon: { fontSize: '24px', width: '40px', textAlign: 'center' },
-    expName: { fontSize: '15px', fontWeight: '600' },
-    expMeta: { fontSize: '13px', color: '#888', marginTop: '2px' },
-    amount: { fontSize: '18px', fontWeight: 'bold', color: '#333' },
+    catIcon: { fontSize: '22px', width: '36px', textAlign: 'center' },
+    expName: { fontSize: '14px', fontWeight: '600', color: 'var(--text-h)' },
+    expMeta: { fontSize: '12px', color: 'var(--text)', marginTop: '2px' },
+    amount: { fontSize: '17px', fontWeight: 'bold', color: 'var(--text-h)', fontFamily: 'var(--sans)' },
     cardActions: { display: 'flex', gap: '6px' },
-    editBtn: { padding: '5px 10px', backgroundColor: '#e3f2fd', color: '#1565C0', border: '1px solid #bbdefb', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
-    deleteBtn: { padding: '5px 10px', backgroundColor: '#ffebee', color: '#d32f2f', border: '1px solid #ffcdd2', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' },
+    editBtn: { padding: '5px 12px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)' },
+    deleteBtn: { padding: '5px 10px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)' },
 };

@@ -7,19 +7,23 @@ import ActivitiesTab from '../components/tabs/ActivitiesTab';
 import ExpensesTab from '../components/tabs/ExpensesTab';
 import ChecklistTab from '../components/tabs/ChecklistTab';
 import MapTab from '../components/tabs/MapTab';
+import logoIcon from '../assets/logoTravelApp.png';
+import logoFont from '../assets/TravelAppFont.png';
+import { useAuth } from '../contexts/AuthContext';
 
 const TABS = [
-    { id: 'overview', label: '?? Pregled' },
-    { id: 'destinations', label: '?? Destinacije' },
-    { id: 'activities', label: '?? Aktivnosti' },
-    { id: 'expenses', label: '?? Troškovi' },
-    { id: 'checklist', label: '? Checklist' },
-    { id: 'map', label: '??? Mapa' },
+    { id: 'overview', label: 'Pregled' },
+    { id: 'destinations', label: 'Destinacije' },
+    { id: 'activities', label: 'Aktivnosti' },
+    { id: 'expenses', label: 'Troskovi' },
+    { id: 'checklist', label: 'Lista' },
+    { id: 'map', label: 'Mapa' },
 ];
 
 export default function PlanDetailPage() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user, logout } = useAuth();
     const [plan, setPlan] = useState(null);
     const [tab, setTab] = useState('overview');
     const [loading, setLoading] = useState(true);
@@ -29,120 +33,120 @@ export default function PlanDetailPage() {
         setLoading(true);
         travelPlanService.getById(id)
             .then(setPlan)
-            .catch(() => setError('Plan nije prona?en ili nemate pristup.'))
+            .catch(() => setError('Plan nije pronadjen ili nemate pristup.'))
             .finally(() => setLoading(false));
     };
 
     useEffect(() => { fetchPlan(); }, [id]);
 
+    const handleLogout = () => { logout(); navigate('/login'); };
+
     if (loading) return (
-        <div style={styles.centered}>
-            <p style={{ color: '#666' }}>U?itavanje...</p>
+        <div style={s.centered}>
+            <p style={{ color: 'var(--text)' }}>Ucitavanje...</p>
         </div>
     );
 
     if (error) return (
-        <div style={styles.centered}>
-            <p style={{ color: '#d32f2f' }}>{error}</p>
-            <button style={styles.backBtn} onClick={() => navigate('/')}>? Nazad</button>
+        <div style={s.centered}>
+            <p style={{ color: 'var(--red)' }}>{error}</p>
+            <button style={s.ghostBtn} onClick={() => navigate('/')}>Nazad</button>
         </div>
     );
 
     return (
-        <div style={styles.container}>
-            <div style={styles.header}>
-                <div style={styles.headerLeft}>
-                    <button style={styles.backBtn} onClick={() => navigate('/')}>? Nazad</button>
+        <div style={s.root}>
+
+            <nav style={s.navbar}>
+                <div style={s.navLeft}>
+                    <img src={logoIcon} alt="logo" style={s.navIcon} />
+                    <img src={logoFont} alt="TravelApp" style={s.navFont} />
+                </div>
+                <div style={s.navRight}>
+                    <span style={s.navEmail}>{user?.email}</span>
+                    <button style={s.ghostBtn} onClick={() => navigate('/')}>Nazad</button>
+                    <button style={s.ghostBtn} onClick={() => navigate(`/plans/${id}/edit`)}>Izmeni</button>
+                    <button style={s.logoutBtn} onClick={handleLogout}>Odjavi se</button>
+                </div>
+            </nav>
+
+            <div style={s.content}>
+
+                <div style={s.pageHeader}>
                     <div>
-                        <h1 style={styles.title}>{plan.name}</h1>
-                        <p style={styles.dates}>
-                            {new Date(plan.startDate).toLocaleDateString('bs-BA')} —{' '}
-                            {new Date(plan.endDate).toLocaleDateString('bs-BA')}
+                        <h1 style={s.pageTitle}>{plan.name}</h1>
+                        <p style={s.pageSubtitle}>
+                            {new Date(plan.startDate).toLocaleDateString('sr-RS')} — {new Date(plan.endDate).toLocaleDateString('sr-RS')}
                         </p>
                     </div>
-                </div>
-                <div style={styles.headerRight}>
-                    <div style={styles.budgetBox}>
-                        <span style={styles.budgetLabel}>Budžet</span>
-                        <span style={styles.budgetAmount}>{plan.budget?.toFixed(2)} €</span>
+                    <div style={s.headerRight}>
+                        <div style={s.budgetBox}>
+                            <span style={s.budgetLabel}>Budzet</span>
+                            <span style={s.budgetValue}>{plan.budget?.toFixed(2)} €</span>
+                        </div>
+                        <div style={s.budgetBox}>
+                            <span style={s.budgetLabel}>Preostalo</span>
+                            <span style={{ ...s.budgetValue, color: plan.remainingBudget < 0 ? 'var(--red)' : 'var(--green-light)' }}>
+                                {plan.remainingBudget?.toFixed(2)} €
+                            </span>
+                        </div>
+                        <button style={s.shareBtn} onClick={() => navigate(`/plans/${id}/share`)}>
+                            Podeli plan
+                        </button>
                     </div>
-                    <div style={styles.budgetBox}>
-                        <span style={styles.budgetLabel}>Preostalo</span>
-                        <span style={{
-                            ...styles.budgetAmount,
-                            color: plan.remainingBudget < 0 ? '#ff5252' : '#69f0ae'
-                        }}>
-                            {plan.remainingBudget?.toFixed(2)} €
-                        </span>
-                    </div>
-                    <button style={styles.editBtn} onClick={() => navigate(`/plans/${id}/edit`)}>
-                        ?? Uredi
-                    </button>
                 </div>
-            </div>
 
-            <div style={styles.tabBar}>
-                {TABS.map(t => (
-                    <button
-                        key={t.id}
-                        style={{ ...styles.tabBtn, ...(tab === t.id ? styles.tabActive : {}) }}
-                        onClick={() => setTab(t.id)}
-                    >
-                        {t.label}
-                    </button>
-                ))}
-            </div>
+                <div style={s.tabs}>
+                    {TABS.map(t => (
+                        <button
+                            key={t.id}
+                            style={{ ...s.tab, ...(tab === t.id ? s.tabActive : {}) }}
+                            onClick={() => setTab(t.id)}
+                        >
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
 
-            <div style={styles.content}>
-                {tab === 'overview' && <OverviewTab plan={plan} onRefresh={fetchPlan} navigate={navigate} planId={id} />}
-                {tab === 'destinations' && <DestinationsTab planId={id} onRefresh={fetchPlan} />}
-                {tab === 'activities' && <ActivitiesTab planId={id} onRefresh={fetchPlan} />}
-                {tab === 'expenses' && <ExpensesTab planId={id} budget={plan.budget} totalExpenses={plan.totalExpenses} onRefresh={fetchPlan} />}
-                {tab === 'checklist' && <ChecklistTab planId={id} />}
-                {tab === 'map' && <MapTab planId={id} />}
+                <div style={s.tabContent}>
+                    {tab === 'overview' && <OverviewTab plan={plan} onRefresh={fetchPlan} navigate={navigate} planId={id} />}
+                    {tab === 'destinations' && <DestinationsTab planId={id} onRefresh={fetchPlan} plan={plan} />}
+                    {tab === 'activities' && <ActivitiesTab planId={id} onRefresh={fetchPlan} plan={plan} />}
+                    {tab === 'expenses' && <ExpensesTab planId={id} budget={plan.budget} totalExpenses={plan.totalExpenses} onRefresh={fetchPlan} plan={plan} />}
+                    {tab === 'checklist' && <ChecklistTab planId={id} />}
+                    {tab === 'map' && <MapTab planId={id} />}
+                </div>
             </div>
         </div>
     );
 }
 
-const styles = {
-    container: { minHeight: '100vh', backgroundColor: '#f5f5f5' },
-    centered: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', gap: '16px' },
-    header: {
-        backgroundColor: '#1565C0', color: 'white',
-        padding: '20px 32px', display: 'flex',
-        justifyContent: 'space-between', alignItems: 'center',
-        flexWrap: 'wrap', gap: '16px'
-    },
-    headerLeft: { display: 'flex', alignItems: 'center', gap: '16px' },
-    headerRight: { display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' },
-    backBtn: {
-        padding: '8px 16px', backgroundColor: 'rgba(255,255,255,0.2)',
-        color: 'white', border: '1px solid rgba(255,255,255,0.4)',
-        borderRadius: '4px', cursor: 'pointer', fontSize: '14px'
-    },
-    title: { margin: 0, fontSize: '22px' },
-    dates: { margin: '4px 0 0 0', fontSize: '13px', opacity: 0.85 },
-    budgetBox: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
-    budgetLabel: { fontSize: '11px', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.5px' },
-    budgetAmount: { fontSize: '18px', fontWeight: 'bold', color: 'white' },
-    editBtn: {
-        padding: '8px 20px', backgroundColor: '#FF9800',
-        color: 'white', border: 'none', borderRadius: '4px',
-        cursor: 'pointer', fontSize: '14px'
-    },
-    tabBar: {
-        backgroundColor: 'white', borderBottom: '1px solid #e0e0e0',
-        display: 'flex', overflowX: 'auto', padding: '0 16px'
-    },
-    tabBtn: {
-        padding: '14px 20px', border: 'none', backgroundColor: 'transparent',
-        cursor: 'pointer', fontSize: '14px', color: '#666',
-        borderBottom: '3px solid transparent', whiteSpace: 'nowrap',
-        transition: 'all 0.2s'
-    },
-    tabActive: {
-        color: '#1565C0', borderBottom: '3px solid #1565C0', fontWeight: '600'
-    },
-    content: { padding: '24px 32px' }
+const s = {
+    root: { minHeight: '100svh', background: 'var(--bg)', display: 'flex', flexDirection: 'column' },
+    centered: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100svh', gap: '16px' },
+
+    navbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 40px', height: '100px', background: 'var(--bg-2)', borderBottom: '1px solid var(--border)', flexShrink: 0 },
+    navLeft: { display: 'flex', alignItems: 'center', gap: '10px' },
+    navIcon: { width: '80px', height: '80px', objectFit: 'contain' },
+    navFont: { height: '80px', marginTop: '10px', objectFit: 'contain' },
+    navRight: { display: 'flex', alignItems: 'center', gap: '12px' },
+    navEmail: { fontSize: '13px', color: 'var(--text)' },
+    ghostBtn: { padding: '7px 14px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--sans)' },
+    logoutBtn: { padding: '7px 14px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', fontSize: '13px', cursor: 'pointer', fontFamily: 'var(--sans)' },
+
+    content: { maxWidth: '1100px', width: '100%', margin: '0 auto', padding: '48px 40px', flex: 1 },
+
+    pageHeader: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' },
+    pageTitle: { fontFamily: 'var(--serif)', fontSize: '36px', fontWeight: 600, color: 'var(--text-h)', letterSpacing: '-0.5px', marginBottom: '6px' },
+    pageSubtitle: { fontSize: '14px', color: 'var(--text)' },
+    headerRight: { display: 'flex', alignItems: 'center', gap: '20px' },
+    budgetBox: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' },
+    budgetLabel: { fontSize: '11px', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.5px' },
+    budgetValue: { fontSize: '20px', fontWeight: 600, color: 'var(--text-h)' },
+    shareBtn: { padding: '9px 18px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--sans)' },
+
+    tabs: { display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)', marginBottom: '28px' },
+    tab: { padding: '10px 18px', background: 'transparent', border: 'none', color: 'var(--text)', fontSize: '14px', cursor: 'pointer', fontFamily: 'var(--sans)', borderBottom: '2px solid transparent', marginBottom: '-1px', transition: 'color 0.2s' },
+    tabActive: { color: 'var(--green-light)', borderBottomColor: 'var(--green-light)' },
+    tabContent: { minHeight: '300px' },
 };
