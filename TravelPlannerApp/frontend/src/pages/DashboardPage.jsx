@@ -9,11 +9,18 @@ export default function DashboardPage() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [plans, setPlans] = useState([]);
+    const [sharedPlans, setSharedPlans] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        travelPlanService.getAll()
-            .then(setPlans)
+        Promise.all([
+            travelPlanService.getAll(),
+            travelPlanService.getSharedPlans(),
+        ])
+            .then(([own, shared]) => {
+                setPlans(own);
+                setSharedPlans(shared);
+            })
             .catch(console.error)
             .finally(() => setLoading(false));
     }, []);
@@ -23,9 +30,86 @@ export default function DashboardPage() {
         navigate('/login');
     };
 
+    const renderCard = (plan, isShared = false) => {
+        const start = new Date(plan.startDate);
+        const end = new Date(plan.endDate);
+        const days = Math.ceil((end - start) / 86400000);
+        const isOver = end < new Date();
+        const remaining = plan.remainingBudget ?? (plan.budget - (plan.totalExpenses || 0));
+
+        return (
+            <div
+                key={plan.id}
+                style={s.card}
+                onClick={() => navigate(`/plans/${plan.id}`)}
+                onMouseEnter={e => e.currentTarget.style.borderColor = isShared ? 'var(--amber)' : 'var(--green)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
+                <div style={s.cardTop}>
+                    <div style={s.cardTitleRow}>
+                        <h2 style={s.cardTitle}>{plan.name}</h2>
+                        <span style={{
+                            ...s.statusBadge,
+                            background: isOver ? 'rgba(255,255,255,0.06)' : 'var(--green-glow)',
+                            color: isOver ? 'var(--text)' : 'var(--green-light)',
+                            border: `1px solid ${isOver ? 'var(--border)' : 'rgba(64,145,108,0.35)'}`,
+                        }}>
+                            {isOver ? 'Zavrseno' : 'Planirano'}
+                        </span>
+                    </div>
+                    {plan.description && (
+                        <p style={s.cardDesc}>{plan.description}</p>
+                    )}
+                </div>
+
+                <div style={s.divider} />
+
+                <div style={s.cardMeta}>
+                    <div style={s.metaItem}>
+                        <span style={s.metaLabel}>Polazak</span>
+                        <span style={s.metaValue}>{start.toLocaleDateString('sr-RS')}</span>
+                    </div>
+                    <div style={s.metaItem}>
+                        <span style={s.metaLabel}>Povratak</span>
+                        <span style={s.metaValue}>{end.toLocaleDateString('sr-RS')}</span>
+                    </div>
+                    <div style={s.metaItem}>
+                        <span style={s.metaLabel}>Trajanje</span>
+                        <span style={s.metaValue}>{days} dana</span>
+                    </div>
+                </div>
+
+                <div style={s.budgetRow}>
+                    <div style={s.budgetLeft}>
+                        <span style={s.metaLabel}>Budzet</span>
+                        <span style={s.budgetAmount}>{plan.budget?.toFixed(0)} €</span>
+                    </div>
+                    <div style={s.budgetLeft}>
+                        <span style={s.metaLabel}>Preostalo</span>
+                        <span style={{
+                            ...s.budgetAmount,
+                            color: remaining < 0 ? 'var(--red)' : 'var(--green-light)',
+                        }}>
+                            {remaining?.toFixed(0)} €
+                        </span>
+                    </div>
+                </div>
+
+                {plan.budget > 0 && (
+                    <div style={s.progressTrack}>
+                        <div style={{
+                            ...s.progressFill,
+                            width: `${Math.min(((plan.budget - remaining) / plan.budget) * 100, 100)}%`,
+                            background: remaining < 0 ? 'var(--red)' : isShared ? 'var(--amber)' : 'var(--green-mid)',
+                        }} />
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div style={s.root}>
-
             <nav style={s.navbar}>
                 <div style={s.navLeft}>
                     <img src={logoIcon} alt="logo" style={s.navIcon} />
@@ -45,7 +129,6 @@ export default function DashboardPage() {
             </nav>
 
             <div style={s.content}>
-
                 <div style={s.pageHeader}>
                     <div>
                         <h1 style={s.pageTitle}>Moja putovanja</h1>
@@ -68,7 +151,6 @@ export default function DashboardPage() {
 
                 {!loading && plans.length === 0 && (
                     <div style={s.emptyState}>
-                        <div style={s.emptyIcon}>🗺️</div>
                         <h3 style={s.emptyTitle}>Nema planiranih putovanja</h3>
                         <p style={s.emptyText}>Kreirajte prvo putovanje i pocnite sa planiranjem</p>
                         <button style={s.newBtn} onClick={() => navigate('/plans/new')}>
@@ -78,88 +160,34 @@ export default function DashboardPage() {
                 )}
 
                 <div style={s.grid}>
-                    {plans.map(plan => {
-                        const start = new Date(plan.startDate);
-                        const end = new Date(plan.endDate);
-                        const days = Math.ceil((end - start) / 86400000);
-                        const isOver = end < new Date();
-                        const remaining = plan.remainingBudget ?? (plan.budget - (plan.totalExpenses || 0));
-
-                        return (
-                            <div
-                                key={plan.id}
-                                style={s.card}
-                                onClick={() => navigate(`/plans/${plan.id}`)}
-                                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--green)'}
-                                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-                            >
-                                <div style={s.cardTop}>
-                                    <div style={s.cardTitleRow}>
-                                        <h2 style={s.cardTitle}>{plan.name}</h2>
-                                        <span style={{
-                                            ...s.statusBadge,
-                                            background: isOver ? 'rgba(255,255,255,0.06)' : 'var(--green-glow)',
-                                            color: isOver ? 'var(--text)' : 'var(--green-light)',
-                                            border: `1px solid ${isOver ? 'var(--border)' : 'rgba(64,145,108,0.35)'}`,
-                                        }}>
-                                            {isOver ? 'Zavrseno' : 'Planirano'}
-                                        </span>
-                                    </div>
-                                    {plan.description && (
-                                        <p style={s.cardDesc}>{plan.description}</p>
-                                    )}
-                                </div>
-
-                                <div style={s.divider} />
-
-                                <div style={s.cardMeta}>
-                                    <div style={s.metaItem}>
-                                        <span style={s.metaLabel}>Polazak</span>
-                                        <span style={s.metaValue}>
-                                            {start.toLocaleDateString('sr-RS')}
-                                        </span>
-                                    </div>
-                                    <div style={s.metaItem}>
-                                        <span style={s.metaLabel}>Povratak</span>
-                                        <span style={s.metaValue}>
-                                            {end.toLocaleDateString('sr-RS')}
-                                        </span>
-                                    </div>
-                                    <div style={s.metaItem}>
-                                        <span style={s.metaLabel}>Trajanje</span>
-                                        <span style={s.metaValue}>{days} dana</span>
-                                    </div>
-                                </div>
-
-                                <div style={s.budgetRow}>
-                                    <div style={s.budgetLeft}>
-                                        <span style={s.metaLabel}>Budzet</span>
-                                        <span style={s.budgetAmount}>{plan.budget?.toFixed(0)} €</span>
-                                    </div>
-                                    <div style={s.budgetLeft}>
-                                        <span style={s.metaLabel}>Preostalo</span>
-                                        <span style={{
-                                            ...s.budgetAmount,
-                                            color: remaining < 0 ? 'var(--red)' : 'var(--green-light)',
-                                        }}>
-                                            {remaining?.toFixed(0)} €
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {plan.budget > 0 && (
-                                    <div style={s.progressTrack}>
-                                        <div style={{
-                                            ...s.progressFill,
-                                            width: `${Math.min(((plan.budget - remaining) / plan.budget) * 100, 100)}%`,
-                                            background: remaining < 0 ? 'var(--red)' : 'var(--green-mid)',
-                                        }} />
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                    {plans.map(plan => renderCard(plan, false))}
                 </div>
+
+                {!loading && (
+                    <div style={{ marginTop: '56px' }}>
+                        <div style={s.pageHeader}>
+                            <div>
+                                <h1 style={s.pageTitle}>Deljena putovanja</h1>
+                                <p style={s.pageSubtitle}>
+                                    {sharedPlans.length > 0
+                                        ? `${sharedPlans.length} ${sharedPlans.length === 1 ? 'putovanje' : 'putovanja'} podeljeno sa vama`
+                                        : 'Nema putovanja podeljenih sa vama'}
+                                </p>
+                            </div>
+                        </div>
+
+                        {sharedPlans.length === 0 && (
+                            <div style={s.emptyState}>
+                                <h3 style={s.emptyTitle}>Nema deljenih putovanja</h3>
+                                <p style={s.emptyText}>Kada neko podeli plan sa vama, pojavice se ovde</p>
+                            </div>
+                        )}
+
+                        <div style={s.grid}>
+                            {sharedPlans.map(plan => renderCard(plan, true))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -172,7 +200,6 @@ const s = {
         display: 'flex',
         flexDirection: 'column',
     },
-
     navbar: {
         display: 'flex',
         alignItems: 'center',
@@ -229,7 +256,6 @@ const s = {
         fontFamily: 'var(--sans)',
         transition: 'border-color 0.2s, color 0.2s',
     },
-
     content: {
         maxWidth: '1200px',
         width: '100%',
@@ -268,7 +294,6 @@ const s = {
         transition: 'background 0.2s',
         whiteSpace: 'nowrap',
     },
-
     emptyState: {
         display: 'flex',
         flexDirection: 'column',
@@ -294,13 +319,11 @@ const s = {
         color: 'var(--text)',
         marginBottom: '8px',
     },
-
     grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
         gap: '20px',
     },
-
     card: {
         background: 'var(--bg-card)',
         border: '1px solid var(--border)',

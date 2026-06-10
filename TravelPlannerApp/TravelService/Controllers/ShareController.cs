@@ -45,5 +45,13 @@ namespace TravelService.Controllers
                 return NotFound(new { message = "Token nije validan ili je istekao" });
             return Ok(result);
         }
+
+        [HttpPost("shared/{token}/accept")]
+        [Authorize]
+        public async Task<IActionResult> AcceptShareToken(string token)
+        {
+            var result = await _service.AcceptShareTokenAsync(token, CurrentUserId);
+            return result ? Ok() : NotFound(new { message = "Token nije validan ili je istekao" });
+        }
     }
 }

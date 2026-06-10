@@ -68,5 +68,20 @@ namespace TravelService.Controllers
             var ok = await _service.DeleteAsync(id, CurrentUserId);
             return ok ? NoContent() : NotFound();
         }
+
+        [HttpGet("shared")]
+        public async Task<IActionResult> GetSharedPlans()
+        {
+            var sharedPlanIds = await _service.GetSharedPlanIdsAsync(CurrentUserId);
+            return Ok(sharedPlanIds);
+        }
+
+        [HttpGet("admin/all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllPlans()
+        {
+            var plans = await _service.GetAllPlansAsync();
+            return Ok(plans);
+        }
     }
 }

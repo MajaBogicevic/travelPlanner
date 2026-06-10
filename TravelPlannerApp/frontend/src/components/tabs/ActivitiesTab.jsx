@@ -5,7 +5,7 @@ import editIcon from '../../assets/edit.png';
 import deleteIcon from '../../assets/delete.png';
 
 const STATUS_LABELS = {
-    Planned: { label: 'Planirano',color: '#60a5fa', bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)' },
+    Planned: { label: 'Planirano', color: '#60a5fa', bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)' },
     Reserved: { label: 'Rezervisano', color: 'var(--amber)', bg: 'var(--amber-bg)', border: 'rgba(232,168,56,0.3)' },
     Completed: { label: 'Zavrseno', color: 'var(--green-light)', bg: 'var(--green-glow)', border: 'rgba(64,145,108,0.35)' },
     Cancelled: { label: 'Otkazano', color: 'var(--red)', bg: 'var(--red-bg)', border: 'rgba(224,92,92,0.3)' },
@@ -57,7 +57,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         if (!form.name.trim()) errs.name = 'Naziv je obavezan';
         if (!form.date) errs.date = 'Datum je obavezan';
         if (plan && form.date && new Date(form.date) < new Date(plan.startDate))
-            errs.date = 'Datum ne moze biti prije pocetka plana';
+            errs.date = 'Datum ne moze biti pre pocetka plana';
         if (plan && form.date && new Date(form.date) > new Date(plan.endDate))
             errs.date = 'Datum ne moze biti nakon zavrsetka plana';
         return errs;
@@ -118,7 +118,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
             }
             setShowForm(false); fetchActivities(); onRefresh();
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greška pri snimanju');
+            setApiError(err.response?.data?.message || 'Greska pri snimanju');
         } finally { setSaving(false); }
     };
 
@@ -127,7 +127,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         try {
             await travelPlanService.deleteActivity(planId, id);
             fetchActivities(); onRefresh();
-        } catch { alert('Greška pri brisanju'); }
+        } catch { alert('Greska pri brisanju'); }
     };
 
     const renderCalendar = () => {
@@ -148,14 +148,14 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                 actsByDay[day].push(a);
             }
         });
-        const dayNames = ['Pon', 'Uto', 'Sri', '?et', 'Pet', 'Sub', 'Ned'];
+        const dayNames = ['Pon', 'Uto', 'Sri', 'Cet', 'Pet', 'Sub', 'Ned'];
         const monthNames = ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Juni', 'Juli', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'];
         return (
             <div style={calStyles.container}>
                 <div style={calStyles.header}>
-                    <button style={calStyles.navBtn} onClick={() => setCalendarMonth(new Date(year, month - 1, 1))}>?</button>
+                    <button style={calStyles.navBtn} onClick={() => setCalendarMonth(new Date(year, month - 1, 1))}>{'<'}</button>
                     <span style={calStyles.monthLabel}>{monthNames[month]} {year}</span>
-                    <button style={calStyles.navBtn} onClick={() => setCalendarMonth(new Date(year, month + 1, 1))}>?</button>
+                    <button style={calStyles.navBtn} onClick={() => setCalendarMonth(new Date(year, month + 1, 1))}>{'>'}</button>
                 </div>
                 <div style={calStyles.grid}>
                     {dayNames.map(d => <div key={d} style={calStyles.dayName}>{d}</div>)}
@@ -165,7 +165,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                                 <>
                                     <div style={calStyles.dayNum}>{day}</div>
                                     {(actsByDay[day] || []).map(a => (
-                                        <div key={a.id} style={{ ...calStyles.actChip, backgroundColor: STATUS_LABELS[a.status]?.bg || '#e3f2fd', color: STATUS_LABELS[a.status]?.color || '#1565C0' }}>
+                                        <div key={a.id} style={{ ...calStyles.actChip, backgroundColor: STATUS_LABELS[a.status]?.bg || 'rgba(96,165,250,0.1)', color: STATUS_LABELS[a.status]?.color || '#60a5fa' }}>
                                             {a.time && <span>{a.time} </span>}{a.name}
                                         </div>
                                     ))}
@@ -178,7 +178,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         );
     };
 
-    if (loading) return <p>U?itavanje...</p>;
+    if (loading) return <p>Ucitavanje...</p>;
 
     return (
         <div>
@@ -208,7 +208,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                                 <select style={styles.input} name='status' value={form.status} onChange={handleChange}>
                                     <option value='Planned'>Planirano</option>
                                     <option value='Reserved'>Rezervisano</option>
-                                    <option value='Completed'>Završeno</option>
+                                    <option value='Completed'>Zavrseno</option>
                                     <option value='Cancelled'>Otkazano</option>
                                 </select>
                             </div>
@@ -225,34 +225,34 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                             </div>
                         </div>
                         <div style={styles.field}>
-                            <label style={styles.label}>Lokacija (pretraži)</label>
+                            <label style={styles.label}>Lokacija (pretrazi)</label>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <input style={{ ...styles.input, flex: 1 }} value={geoQuery}
                                     onChange={e => setGeoQuery(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), searchGeo())}
-                                    placeholder='Pretraži lokaciju...' />
+                                    placeholder='Pretrazi lokaciju...' />
                                 <button type='button' style={styles.geoBtn} onClick={searchGeo} disabled={geoLoading}>
-                                    {geoLoading ? '...' : '??'}
+                                    {geoLoading ? '...' : 'Trazi'}
                                 </button>
                             </div>
                             {geoResults.length > 0 && (
                                 <div style={styles.geoDropdown}>
                                     {geoResults.map((r, i) => (
-                                        <div key={i} style={styles.geoItem} onClick={() => selectGeo(r)}>?? {r.displayName}</div>
+                                        <div key={i} style={styles.geoItem} onClick={() => selectGeo(r)}>{r.displayName}</div>
                                     ))}
-                                    <div style={styles.geoClose} onClick={() => setGeoResults([])}>? Zatvori</div>
+                                    <div style={styles.geoClose} onClick={() => setGeoResults([])}>Zatvori</div>
                                 </div>
                             )}
                             {form.location && (
                                 <div style={styles.selectedLoc}>
-                                    ? {form.location}
-                                    {form.latitude && <span style={{ color: '#888', fontSize: '11px' }}> ({parseFloat(form.latitude).toFixed(4)}, {parseFloat(form.longitude).toFixed(4)})</span>}
+                                    {form.location}
+                                    {form.latitude && <span style={{ color: 'var(--text)', fontSize: '11px' }}> ({parseFloat(form.latitude).toFixed(4)}, {parseFloat(form.longitude).toFixed(4)})</span>}
                                 </div>
                             )}
                         </div>
                         <div style={styles.formRow}>
                             <div style={styles.field}>
-                                <label style={styles.label}>Procijenjeni trošak (€)</label>
+                                <label style={styles.label}>Procijenjeni trosak (EUR)</label>
                                 <input style={styles.input} type='number' min='0' step='0.01' name='estimatedCost' value={form.estimatedCost} onChange={handleChange} />
                             </div>
                             <div style={styles.field}>
@@ -262,7 +262,7 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                         </div>
                         {apiError && <div style={styles.apiError}>{apiError}</div>}
                         <div style={styles.formBtns}>
-                            <button type='button' style={styles.cancelBtn} onClick={() => setShowForm(false)}>Otkaži</button>
+                            <button type='button' style={styles.cancelBtn} onClick={() => setShowForm(false)}>Otkazi</button>
                             <button type='submit' style={styles.saveBtn} disabled={saving}>{saving ? 'Snima...' : 'Sacuvaj'}</button>
                         </div>
                     </form>
@@ -289,19 +289,15 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                                                 {new Date(act.date).toLocaleDateString('sr-RS')}
                                                 {act.time && <span> • {act.time}</span>}
                                                 {act.location && <span> • {act.location}</span>}
-                                                {act.estimatedCost != null && <span> • {act.estimatedCost} €</span>}
+                                                {act.estimatedCost != null && <span> • {act.estimatedCost} EUR</span>}
                                             </div>
                                             {act.description && <p style={styles.actDesc}>{act.description}</p>}
                                         </div>
                                     </div>
                                     <div style={styles.cardRight}>
-                                        <span style={{ 
-                                            padding: '2px 8px',
-                                            borderRadius: '99px',
-                                            fontSize: '11px',
-                                            fontWeight: '500',
-                                            color: s.color,
-                                            background: s.bg,
+                                        <span style={{
+                                            padding: '2px 8px', borderRadius: '99px', fontSize: '11px',
+                                            fontWeight: '500', color: s.color, background: s.bg,
                                             border: `1px solid ${s.border}`,
                                         }}>
                                             {s.label}
@@ -357,9 +353,8 @@ const styles = {
     actName: { fontSize: '15px', fontWeight: '600', color: 'var(--text-h)', marginBottom: '4px' },
     actMeta: { fontSize: '13px', color: 'var(--text)' },
     actDesc: { fontSize: '13px', color: 'var(--text)', margin: '4px 0 0 0' },
-    statusBadge: { padding: '3px 10px', borderRadius: '99px', fontSize: '11px', fontWeight: '500', marginBottom: '10px'  },
     cardActions: { display: 'flex', gap: '6px' },
-    editBtn: { padding: '5px 12px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px'  },
+    editBtn: { padding: '5px 12px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px' },
     deleteBtn: { padding: '5px 10px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px' },
 };
 

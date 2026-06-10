@@ -22,5 +22,6 @@ namespace TravelService.DTO.TravelPlan
         public List<ActivityResponseDto> Activities { get; set; } = new();
         public List<ExpenseResponseDto> Expenses { get; set; } = new();
         public List<ChecklistItemDto> ChecklistItems { get; set; } = new();
+        public int UserId { get; set; }
     }
 }

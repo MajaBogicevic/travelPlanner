@@ -9,5 +9,7 @@ namespace TravelService.Services
         Task<TravelPlanResponseDto> CreateAsync(CreateTravelPlanDto dto, int userId);
         Task<TravelPlanResponseDto?> UpdateAsync(int id, UpdateTravelPlanDto dto, int userId);
         Task<bool> DeleteAsync(int id, int userId);
+        Task<List<TravelPlanResponseDto>> GetSharedPlanIdsAsync(int userId);
+        Task<List<TravelPlanResponseDto>> GetAllPlansAsync();
     }
 }

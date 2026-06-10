@@ -7,5 +7,6 @@ namespace TravelService.Services
     {
         Task<ShareResponseDto> CreateShareTokenAsync(int planId, CreateShareDto dto, int userId);
         Task<SharedPlanResponseDto?> GetByTokenAsync(string token);
+        Task<bool> AcceptShareTokenAsync(string token, int userId);
     }
 }

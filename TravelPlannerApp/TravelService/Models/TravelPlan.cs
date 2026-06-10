@@ -19,5 +19,6 @@ namespace TravelService.Models
         public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
         public ICollection<ChecklistItem> ChecklistItems { get; set; } = new List<ChecklistItem>();
         public ICollection<SharedPlan> SharedPlans { get; set; } = new List<SharedPlan>();
+        public ICollection<PlanAccess> PlanAccesses { get; set; } = new List<PlanAccess>();
     }
 }

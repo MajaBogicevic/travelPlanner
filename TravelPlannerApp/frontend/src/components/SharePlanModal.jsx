@@ -88,7 +88,7 @@ export default function SharePlanModal({ planId, onClose }) {
                             <div style={styles.linkRow}>
                                 <input style={styles.linkInput} value={shareData.shareUrl} readOnly onFocus={e => e.target.select()} />
                                 <button style={{ ...styles.copyBtn, ...(copied ? styles.copiedBtn : {}) }} onClick={copyLink}>
-                                    {copied ? '✅ Kopirano!' : 'Kopiraj'}
+                                    {copied ? 'Kopirano!' : 'Kopiraj'}
                                 </button>
                             </div>
                         </div>

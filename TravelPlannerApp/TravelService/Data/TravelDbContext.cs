@@ -15,6 +15,7 @@ namespace TravelService.Data
         public DbSet<Expense> Expenses => Set<Expense>();
         public DbSet<ChecklistItem> ChecklistItems => Set<ChecklistItem>();
         public DbSet<SharedPlan> SharedPlans => Set<SharedPlan>();
+        public DbSet<PlanAccess> PlanAccesses => Set<PlanAccess>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -41,6 +42,10 @@ namespace TravelService.Data
             b.Entity<TravelPlan>().Property(t => t.Budget).HasPrecision(18, 2);
             b.Entity<Expense>().Property(e => e.Amount).HasPrecision(18, 2);
             b.Entity<Activity>().Property(a => a.EstimatedCost).HasPrecision(18, 2);
+
+            b.Entity<TravelPlan>().HasMany(t => t.PlanAccesses)
+            .WithOne(a => a.TravelPlan).HasForeignKey(a => a.TravelPlanId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

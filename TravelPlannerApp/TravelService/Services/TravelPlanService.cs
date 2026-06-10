@@ -37,8 +37,8 @@ namespace TravelService.Services
                 .Include(p => p.Activities)
                 .Include(p => p.Expenses)
                 .Include(p => p.ChecklistItems)
-                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
-
+                .FirstOrDefaultAsync(p => p.Id == id &&
+                    (p.UserId == userId || _db.PlanAccesses.Any(a => a.TravelPlanId == id && a.UserId == userId)));
             return plan == null ? null : _mapper.Map<TravelPlanResponseDto>(plan);
         }
 
@@ -76,6 +76,35 @@ namespace TravelService.Services
             _db.TravelPlans.Remove(plan);
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<TravelPlanResponseDto>> GetSharedPlanIdsAsync(int userId)
+        {
+            var sharedPlanIds = await _db.PlanAccesses
+                .Where(a => a.UserId == userId)
+                .Select(a => a.TravelPlanId)
+                .ToListAsync();
+
+            var plans = await _db.TravelPlans
+                .Include(p => p.Destinations)
+                .Include(p => p.Activities)
+                .Include(p => p.Expenses)
+                .Include(p => p.ChecklistItems)
+                .Where(p => sharedPlanIds.Contains(p.Id))
+                .ToListAsync();
+
+            return _mapper.Map<List<TravelPlanResponseDto>>(plans);
+        }
+
+        public async Task<List<TravelPlanResponseDto>> GetAllPlansAsync()
+        {
+            var plans = await _db.TravelPlans
+                .Include(p => p.Destinations)
+                .Include(p => p.Activities)
+                .Include(p => p.Expenses)
+                .Include(p => p.ChecklistItems)
+                .ToListAsync();
+            return _mapper.Map<List<TravelPlanResponseDto>>(plans);
         }
     }
 }
