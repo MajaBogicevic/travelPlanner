@@ -1,7 +1,5 @@
 ﻿namespace AuthService.Models
 {
-    namespace TravelService.Models
-    {
         public class User
         {
             public int Id { get; set; }
@@ -13,6 +11,5 @@
         }
 
         public enum UserRole { User, Admin }
-    }
 
 }

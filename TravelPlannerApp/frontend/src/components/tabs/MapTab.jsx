@@ -8,6 +8,9 @@ export default function MapTab({ planId }) {
     const [loading, setLoading] = useState(true);
     const [mapReady, setMapReady] = useState(false);
     const [mapError, setMapError] = useState(null);
+    const LEAFLET_CDN = import.meta.env.VITE_LEAFLET_CDN;
+    const OSM_TILE_URL = import.meta.env.VITE_OSM_TILE_URL;
+    const OSM_ATTRIBUTION_URL = import.meta.env.VITE_OSM_ATTRIBUTION_URL;
 
     useEffect(() => {
         travelPlanService.getActivities(planId)
@@ -27,12 +30,12 @@ export default function MapTab({ planId }) {
             const link = document.createElement('link');
             link.id = 'leaflet-css';
             link.rel = 'stylesheet';
-            link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            link.href = `${LEAFLET_CDN}/leaflet.css`;
             document.head.appendChild(link);
         }
         if (!window.L) {
             const script = document.createElement('script');
-            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.src = `${LEAFLET_CDN}/leaflet.js`;
             script.onload = () => setTimeout(() => setMapReady(true), 100);
             script.onerror = () => setMapError('Nije moguće učitati mapu. Provjerite internet konekciju.');
             document.head.appendChild(script);
@@ -49,15 +52,15 @@ export default function MapTab({ planId }) {
 
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
-            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconRetinaUrl: `${LEAFLET_CDN}/images/marker-icon-2x.png`,
+            iconUrl: `${LEAFLET_CDN}/images/marker-icon.png`,
+            shadowUrl: `${LEAFLET_CDN}/images/marker-shadow.png`,
         });
 
         const positions = activities.map(a => [a.latitude, a.longitude]);
         const map = L.map('travel-map').setView(positions[0], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        L.tileLayer(OSM_TILE_URL, {
+            attribution: `© <a href="${OSM_ATTRIBUTION_URL}">OpenStreetMap</a>`,
         }).addTo(map);
 
         const numberedIcon = (n) => L.divIcon({

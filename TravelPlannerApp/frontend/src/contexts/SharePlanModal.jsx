@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import travelPlanService from '../services/travelPlanService';
 import editIcon from '../assets/edit.png';
 import eyeIcon from '../assets/eye.webp';
+import { toast } from '../utils/toast';
 
 export default function SharePlanModal({ planId, onClose }) {
     const [accessType, setAccessType] = useState('View');
@@ -10,14 +11,18 @@ export default function SharePlanModal({ planId, onClose }) {
     const [error, setError] = useState(null);
     const [copied, setCopied] = useState(false);
     const qrRef = useRef(null);
+    const QRCODE_CDN_URL = import.meta.env.VITE_QRCODE_CDN_URL;
 
     const generate = async () => {
         setLoading(true); setError(null);
         try {
             const data = await travelPlanService.createShareToken(planId, accessType);
             setShareData(data);
+            toast.success('Link je uspešno generisan');
         } catch (err) {
-            setError(err.response?.data?.message || 'Greška pri generisanju linka');
+            const msg = err.response?.data?.message || 'Greška pri generisanju linka';
+            setError(msg);
+            toast.error(msg);
         } finally { setLoading(false); }
     };
 
@@ -34,7 +39,7 @@ export default function SharePlanModal({ planId, onClose }) {
         };
         if (!window.QRCode) {
             const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+            script.src = QRCODE_CDN_URL;
             script.onload = renderQR;
             document.head.appendChild(script);
         } else { renderQR(); }
@@ -50,6 +55,7 @@ export default function SharePlanModal({ planId, onClose }) {
             document.execCommand('copy'); document.body.removeChild(el);
         }
         setCopied(true); setTimeout(() => setCopied(false), 2000);
+        toast.success('Link je kopiran u clipboard');
     };
 
     return (

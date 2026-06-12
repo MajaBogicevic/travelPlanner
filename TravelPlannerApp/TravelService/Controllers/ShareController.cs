@@ -10,24 +10,25 @@ namespace TravelService.Controllers
     [Route("api")]
     public class ShareController : ControllerBase
     {
-        private readonly IShareService _service;
+        private readonly IShareService service;
 
         public ShareController(IShareService service)
         {
-            _service = service;
+            this.service = service;
         }
 
-        private int CurrentUserId =>
-            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        private int CurrentUserId => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
         [HttpPost("travel-plans/{planId}/share")]
         [Authorize]
         public async Task<IActionResult> CreateShareToken(int planId, [FromBody] CreateShareDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             try
             {
-                var result = await _service.CreateShareTokenAsync(planId, dto, CurrentUserId);
+                var result = await service.CreateShareTokenAsync(planId, dto, CurrentUserId);
                 return Ok(result);
             }
             catch (KeyNotFoundException)
@@ -40,9 +41,10 @@ namespace TravelService.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetByToken(string token)
         {
-            var result = await _service.GetByTokenAsync(token);
+            var result = await service.GetByTokenAsync(token);
             if (result == null)
                 return NotFound(new { message = "Token nije validan ili je istekao" });
+
             return Ok(result);
         }
 
@@ -50,8 +52,15 @@ namespace TravelService.Controllers
         [Authorize]
         public async Task<IActionResult> AcceptShareToken(string token)
         {
-            var result = await _service.AcceptShareTokenAsync(token, CurrentUserId);
-            return result ? Ok() : NotFound(new { message = "Token nije validan ili je istekao" });
+            var result = await service.AcceptShareTokenAsync(token, CurrentUserId);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound(new { message = "Token nije validan ili je istekao" });
+            }
         }
     }
 }

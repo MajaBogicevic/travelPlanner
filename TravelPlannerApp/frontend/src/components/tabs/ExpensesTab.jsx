@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
 import editIcon from '../../assets/edit.png';
 import deleteIcon from '../../assets/delete.png';
+import { toast } from '../../utils/toast';
 
 const CATEGORIES = ['Transport', 'Accommodation', 'Food', 'Tickets', 'Shopping', 'Other'];
 const CATEGORY_ICONS = { Transport: '', Accommodation: '', Food: '', Tickets: '', Shopping: '', Other: '' };
@@ -71,19 +72,28 @@ export default function ExpensesTab({ planId, budget, onRefresh, plan }) {
         try {
             if (editingId) {
                 await travelPlanService.updateExpense(planId, editingId, payload);
+                toast.success('Trošak je uspešno izmenjen');
             } else {
                 await travelPlanService.addExpense(planId, payload);
+                toast.success('Trošak je uspešno dodan');
             }
             setShowForm(false); fetchExpenses(); onRefresh();
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greška pri snimanju');
+            const msg = err.response?.data?.message || 'Greška pri snimanju';
+            setApiError(msg);
+            toast.error(msg);
         } finally { setSaving(false); }
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm('Obrisati trošak?')) return;
-        try { await travelPlanService.deleteExpense(planId, id); fetchExpenses(); onRefresh(); }
-        catch { alert('Greška pri brisanju'); }
+        try {
+            await travelPlanService.deleteExpense(planId, id);
+            fetchExpenses(); onRefresh();
+            toast.success('Trošak je uspešno obrisan');
+        } catch {
+            toast.error('Greška pri brisanju');
+        }
     };
 
     const filtered = filterCat === 'All' ? expenses : expenses.filter(e => e.category === filterCat);

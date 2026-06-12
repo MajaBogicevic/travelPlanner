@@ -1,6 +1,7 @@
 const geocodingService = {
     search: async (query) => {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`;
+        const baseUrl = import.meta.env.VITE_GEOCODING_API_URL;
+        const url = `${baseUrl}?q=${encodeURIComponent(query)}&format=json&limit=5`;
         const res = await fetch(url, {
             headers: {
                 'Accept-Language': 'bs,hr,sr,en',
@@ -16,5 +17,4 @@ const geocodingService = {
         }));
     }
 };
-
 export default geocodingService;

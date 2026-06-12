@@ -11,11 +11,11 @@ namespace TravelService.Controllers
     [Authorize]
     public class DestinationsController : ControllerBase
     {
-        private readonly IDestinationService _service;
+        private readonly IDestinationService service;
 
         public DestinationsController(IDestinationService service)
         {
-            _service = service;
+            this.service = service;
         }
 
         private int CurrentUserId =>
@@ -23,40 +23,70 @@ namespace TravelService.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll(int planId)
-            => Ok(await _service.GetAllAsync(planId, CurrentUserId));
+        {
+            var result = await service.GetAllAsync(planId, CurrentUserId);
+            return Ok(result);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int planId, int id)
         {
-            var destination = await _service.GetByIdAsync(id, planId, CurrentUserId);
-            return destination == null ? NotFound() : Ok(destination);
+            var destination = await service.GetByIdAsync(id, planId, CurrentUserId);
+            if (destination == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(destination);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(int planId, [FromBody] CreateDestinationDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             if (dto.DepartureDate < dto.ArrivalDate)
                 return BadRequest(new { message = "Datum odlaska ne može biti prije dolaska" });
-            var destination = await _service.CreateAsync(planId, dto, CurrentUserId);
+
+            var destination = await service.CreateAsync(planId, dto, CurrentUserId);
             return CreatedAtAction(nameof(GetById), new { planId, id = destination.Id }, destination);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int planId, int id, [FromBody] UpdateDestinationDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             if (dto.DepartureDate < dto.ArrivalDate)
                 return BadRequest(new { message = "Datum odlaska ne može biti prije dolaska" });
-            var destination = await _service.UpdateAsync(id, planId, dto, CurrentUserId);
-            return destination == null ? NotFound() : Ok(destination);
+
+            var destination = await service.UpdateAsync(id, planId, dto, CurrentUserId);
+            if (destination == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(destination);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int planId, int id)
         {
-            var ok = await _service.DeleteAsync(id, planId, CurrentUserId);
-            return ok ? NoContent() : NotFound();
+            var ok = await service.DeleteAsync(id, planId, CurrentUserId);
+            if (ok)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import travelPlanService from '../services/travelPlanService';
 import logoIcon from '../assets/logoTravelApp.png';
 import logoFont from '../assets/TravelAppFont.png';
+import { toast } from '../utils/toast';
 
 export default function CreatePlanPage() {
     const navigate = useNavigate();
@@ -49,9 +50,12 @@ export default function CreatePlanPage() {
                 ...form,
                 budget: form.budget ? Number(form.budget) : 0,
             });
+            toast.success('Putovanje je uspešno kreirano');
             navigate(`/plans/${plan.id}`);
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greska pri kreiranju plana');
+            const msg = err.response?.data?.message || 'Greska pri kreiranju plana';
+            setApiError(msg);
+            toast.error(msg);
         } finally {
             setSubmitting(false);
         }

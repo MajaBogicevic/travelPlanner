@@ -7,4 +7,7 @@
 		<Parameter Name="Issuer" Value="TravelPlannerAPI" />
 		<Parameter Name="Audience" Value="TravelPlannerClient" />
 	</Section>
+	<Section Name="FrontendSettings">
+		<Parameter Name="BaseUrl" Value="http://localhost:5173" />
+	</Section>
 </Settings>

@@ -20,8 +20,7 @@ namespace BackendSF
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("BackendSFType",
-                    context => new BackendSF(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("BackendSFType", context => new BackendSF(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(BackendSF).Name);
 

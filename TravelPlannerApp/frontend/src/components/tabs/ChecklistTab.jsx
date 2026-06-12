@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import travelPlanService from '../../services/travelPlanService';
 import deleteIcon from '../../assets/delete.png';
+import { toast } from '../../utils/toast';
 
 export default function ChecklistTab({ planId }) {
     const [items, setItems] = useState([]);
@@ -25,21 +26,33 @@ export default function ChecklistTab({ planId }) {
         try {
             await travelPlanService.addChecklistItem(planId, { text: newText.trim() });
             setNewText(''); fetchItems();
+            toast.success('Stavka je dodana');
         } catch (err) {
-            setAddError(err.response?.data?.message || 'Greška pri dodavanju');
+            const msg = err.response?.data?.message || 'Greška pri dodavanju';
+            setAddError(msg);
+            toast.error(msg);
         } finally { setAdding(false); }
     };
 
     const handleToggle = async (id) => {
         setItems(prev => prev.map(i => i.id === id ? { ...i, isCompleted: !i.isCompleted } : i));
-        try { await travelPlanService.toggleChecklist(planId, id); }
-        catch { setItems(prev => prev.map(i => i.id === id ? { ...i, isCompleted: !i.isCompleted } : i)); }
+        try {
+            await travelPlanService.toggleChecklist(planId, id);
+        } catch {
+            setItems(prev => prev.map(i => i.id === id ? { ...i, isCompleted: !i.isCompleted } : i));
+            toast.error('Greška pri ažuriranju stavke');
+        }
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm('Obrisati stavku?')) return;
-        try { await travelPlanService.deleteChecklistItem(planId, id); setItems(prev => prev.filter(i => i.id !== id)); }
-        catch { alert('Greška pri brisanju'); }
+        try {
+            await travelPlanService.deleteChecklistItem(planId, id);
+            setItems(prev => prev.filter(i => i.id !== id));
+            toast.success('Stavka je obrisana');
+        } catch {
+            toast.error('Greška pri brisanju');
+        }
     };
 
     const completed = items.filter(i => i.isCompleted).length;

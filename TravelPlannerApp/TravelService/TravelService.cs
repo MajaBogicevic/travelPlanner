@@ -36,6 +36,12 @@ namespace TravelService
                         var config = ctx.CodePackageActivationContext.GetConfigurationPackageObject("Config").Settings;
                         var connStr = config.Sections["ConnectionStrings"].Parameters["DefaultConnection"].Value;
                         var jwtSecret = config.Sections["JwtSettings"].Parameters["Secret"].Value;
+                        var frontendUrl = config.Sections["FrontendSettings"].Parameters["BaseUrl"].Value;
+
+                        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+                        {
+                            ["FrontendSettings:BaseUrl"] = frontendUrl
+                        });
 
                         builder.Services.AddDbContext<TravelDbContext>(o => o.UseSqlServer(connStr));
                         builder.Services.AddScoped<ITravelPlanService, TravelPlanService>();
@@ -58,8 +64,7 @@ namespace TravelService
                         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(
-                                    Encoding.UTF8.GetBytes(jwtSecret)),
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
                                 ValidateIssuer = true,
                                 ValidIssuer = "TravelPlannerAPI",
                                 ValidateAudience = true,
@@ -69,7 +74,7 @@ namespace TravelService
                             });
                         builder.Services.AddAuthorization();
                         builder.Services.AddCors(o => o.AddPolicy("AllowFrontend",
-                            p => p.WithOrigins("http://localhost:5173")
+                            p => p.WithOrigins(frontendUrl!)
                                    .AllowAnyHeader()
                                    .AllowAnyMethod()
                                    .AllowCredentials()));

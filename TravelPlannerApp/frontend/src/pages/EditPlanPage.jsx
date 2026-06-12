@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import travelPlanService from '../services/travelPlanService';
 import deleteIcon from '../assets/delete.png';
+import { toast } from '../utils/toast';
 
 export default function EditPlanPage() {
     const { id } = useParams();
@@ -49,16 +50,26 @@ export default function EditPlanPage() {
         setSubmitting(true); setApiError(null);
         try {
             await travelPlanService.update(id, { ...form, budget: Number(form.budget) || 0 });
+            toast.success('Promene su uspešno sačuvane');
             navigate(`/plans/${id}`);
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greška pri ažuriranju plana');
+            const msg = err.response?.data?.message || 'Greška pri ažuriranju plana';
+            setApiError(msg);
+            toast.error(msg);
         } finally { setSubmitting(false); }
     };
 
     const handleDelete = async () => {
         setSubmitting(true);
-        try { await travelPlanService.delete(id); navigate('/'); }
-        catch { setApiError('Greška pri brisanju plana.'); setShowDeleteConfirm(false); setSubmitting(false); }
+        try {
+            await travelPlanService.delete(id);
+            toast.success('Plan je uspešno obrisan');
+            navigate('/');
+        } catch {
+            setApiError('Greška pri brisanju plana.');
+            toast.error('Greška pri brisanju plana');
+            setShowDeleteConfirm(false); setSubmitting(false);
+        }
     };
 
     if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100svh', background: 'var(--bg)' }}><p style={{ color: 'var(--text)' }}>Ucitavanje...</p></div>;

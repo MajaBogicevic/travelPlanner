@@ -12,4 +12,7 @@
 		<Parameter Name="Audience" Value="TravelPlannerClient" />
 		<Parameter Name="ExpiryDays" Value="7" />
 	</Section>
+	<Section Name="FrontendSettings">
+		<Parameter Name="BaseUrl" Value="http://localhost:5173" />
+	</Section>
 </Settings>

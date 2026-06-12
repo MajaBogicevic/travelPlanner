@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SharePlanModal from '../SharePlanModal';
+import SharePlanModal from '../../contexts/SharePlanModal';
 import travelPlanService from '../../services/travelPlanService';
 import editIcon from '../../assets/edit.png';
 import deleteIcon from '../../assets/delete.png';

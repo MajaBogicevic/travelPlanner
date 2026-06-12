@@ -20,8 +20,7 @@ namespace AuthService
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("AuthServiceType",
-                    context => new AuthService(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("AuthServiceType",context => new AuthService(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(AuthService).Name);
 

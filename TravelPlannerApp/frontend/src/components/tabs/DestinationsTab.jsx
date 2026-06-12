@@ -3,6 +3,7 @@ import travelPlanService from '../../services/travelPlanService';
 import editIcon from '../../assets/edit.png';
 import deleteIcon from '../../assets/delete.png';
 import locationIcon from '../../assets/location.webp';
+import { toast } from '../../utils/toast';
 
 const emptyForm = { name: '', location: '', arrivalDate: '', departureDate: '', description: '' };
 
@@ -71,12 +72,16 @@ export default function DestinationsTab({ planId, onRefresh, plan }) {
         try {
             if (editingId) {
                 await travelPlanService.updateDestination(planId, editingId, form);
+                toast.success('Destinacija je uspešno izmenjena');
             } else {
                 await travelPlanService.addDestination(planId, form);
+                toast.success('Destinacija je uspešno dodata');
             }
             setShowForm(false); fetchDestinations(); onRefresh();
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greška pri snimanju');
+            const msg = err.response?.data?.message || 'Greška pri snimanju';
+            setApiError(msg);
+            toast.error(msg);
         } finally { setSaving(false); }
     };
 
@@ -85,7 +90,10 @@ export default function DestinationsTab({ planId, onRefresh, plan }) {
         try {
             await travelPlanService.deleteDestination(planId, id);
             fetchDestinations(); onRefresh();
-        } catch { alert('Greška pri brisanju'); }
+            toast.success('Destinacija je uspešno obrisana');
+        } catch {
+            toast.error('Greška pri brisanju');
+        }
     };
 
     if (loading) return <p>Učitavanje...</p>;

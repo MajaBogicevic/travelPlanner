@@ -19,8 +19,7 @@ namespace NotificationService
 
         public async Task PublishAsync(TravelPlanEvent planEvent)
         {
-            var queue = await StateManager
-                .GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
+            var queue = await StateManager.GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
 
             using var tx = StateManager.CreateTransaction();
             await queue.EnqueueAsync(tx, planEvent);
@@ -31,13 +30,11 @@ namespace NotificationService
         /// Optional override to create listeners (like tcp, http) for this service instance.
         /// </summary>
         /// <returns>The collection of listeners.</returns>
-        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
-            => this.CreateServiceRemotingReplicaListeners();
+        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners() => this.CreateServiceRemotingReplicaListeners();
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            var queue = await StateManager
-                .GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
+            var queue = await StateManager.GetOrAddAsync<IReliableQueue<TravelPlanEvent>>(QueueName);
 
             while (true)
             {
@@ -62,8 +59,7 @@ namespace NotificationService
 
         private Task ProcessEventAsync(TravelPlanEvent evt)
         {
-            ServiceEventSource.Current.ServiceMessage(Context,
-                $"[{evt.EventType}] Plan: {evt.PlanName}, User: {evt.UserEmail}, Time: {evt.Timestamp}");
+            ServiceEventSource.Current.ServiceMessage(Context, $"[{evt.EventType}] Plan: {evt.PlanName}, User: {evt.UserEmail}, Time: {evt.Timestamp}");
             return Task.CompletedTask;
         }
     }

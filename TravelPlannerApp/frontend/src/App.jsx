@@ -10,6 +10,7 @@ import EditPlanPage from './pages/EditPlanPage';
 import SharedPlanPage from './pages/SharedPlanPage';
 import AdminPage from './pages/AdminPage';
 import AcceptSharePage from './pages/AcceptSharePage';
+import Toast from './components/Toast';
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
                         <ProtectedRoute requiredRole='Admin'><AdminPage /></ProtectedRoute>} />
                     <Route path='*' element={<Navigate to='/' replace />} />
                 </Routes>
+                <Toast/>
             </BrowserRouter>
         </AuthProvider>
     );

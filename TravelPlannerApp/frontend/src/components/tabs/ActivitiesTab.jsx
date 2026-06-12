@@ -3,6 +3,7 @@ import travelPlanService from '../../services/travelPlanService';
 import geocodingService from '../../services/geocodingService';
 import editIcon from '../../assets/edit.png';
 import deleteIcon from '../../assets/delete.png';
+import { toast } from '../../utils/toast';
 
 const STATUS_LABELS = {
     Planned: { label: 'Planirano', color: '#60a5fa', bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.3)' },
@@ -113,12 +114,16 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         try {
             if (editingId) {
                 await travelPlanService.updateActivity(planId, editingId, payload);
+                toast.success('Aktivnost je uspešno izmenjena');
             } else {
                 await travelPlanService.addActivity(planId, payload);
+                toast.success('Aktivnost je uspešno dodana');
             }
             setShowForm(false); fetchActivities(); onRefresh();
         } catch (err) {
-            setApiError(err.response?.data?.message || 'Greska pri snimanju');
+            const msg = err.response?.data?.message || 'Greska pri snimanju';
+            setApiError(msg);
+            toast.error(msg);
         } finally { setSaving(false); }
     };
 
@@ -127,7 +132,10 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         try {
             await travelPlanService.deleteActivity(planId, id);
             fetchActivities(); onRefresh();
-        } catch { alert('Greska pri brisanju'); }
+            toast.success('Aktivnost je uspešno obrisana');
+        } catch {
+            toast.error('Greska pri brisanju');
+        }
     };
 
     const groupByDate = (acts) => {

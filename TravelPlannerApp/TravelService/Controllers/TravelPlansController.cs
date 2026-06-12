@@ -11,68 +11,93 @@ namespace TravelService.Controllers
     [Authorize]
     public class TravelPlansController : ControllerBase
     {
-        private readonly ITravelPlanService _service;
+        private readonly ITravelPlanService service;
 
         public TravelPlansController(ITravelPlanService service)
         {
-            _service = service;
+            this.service = service;
         }
 
-        private int CurrentUserId =>
-            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        private int CurrentUserId => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok(await _service.GetAllByUserAsync(CurrentUserId));
+        {
+            var result = await service.GetAllByUserAsync(CurrentUserId);
+            return Ok(result);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var plan = await _service.GetByIdAsync(id, CurrentUserId);
-            return plan == null ? NotFound() : Ok(plan);
+            var plan = await service.GetByIdAsync(id, CurrentUserId);
+            if (plan == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(plan);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTravelPlanDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
 
             if (dto.EndDate < dto.StartDate)
-                return BadRequest(new { message = "Krajnji datum ne može biti prije početnog" });
+                return BadRequest(new { message = "Krajnji datum ne može biti pre početnog" });
 
             if (dto.Budget < 0)
                 return BadRequest(new { message = "Budžet ne može biti negativan" });
 
-            var plan = await _service.CreateAsync(dto, CurrentUserId);
+            var plan = await service.CreateAsync(dto, CurrentUserId);
             return CreatedAtAction(nameof(GetById), new { id = plan.Id }, plan);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateTravelPlanDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
 
             if (dto.EndDate < dto.StartDate)
-                return BadRequest(new { message = "Krajnji datum ne može biti prije početnog" });
+                return BadRequest(new { message = "Krajnji datum ne može biti pre početnog" });
 
             if (dto.Budget < 0)
                 return BadRequest(new { message = "Budžet ne može biti negativan" });
 
-            var plan = await _service.UpdateAsync(id, dto, CurrentUserId);
-            return plan == null ? NotFound() : Ok(plan);
+            var plan = await service.UpdateAsync(id, dto, CurrentUserId);
+            if (plan == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(plan);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var ok = await _service.DeleteAsync(id, CurrentUserId);
-            return ok ? NoContent() : NotFound();
+            var ok = await service.DeleteAsync(id, CurrentUserId);
+            if (ok)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("shared")]
         public async Task<IActionResult> GetSharedPlans()
         {
-            var sharedPlanIds = await _service.GetSharedPlanIdsAsync(CurrentUserId);
+            var sharedPlanIds = await service.GetSharedPlanIdsAsync(CurrentUserId);
             return Ok(sharedPlanIds);
         }
 
@@ -80,7 +105,7 @@ namespace TravelService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllPlans()
         {
-            var plans = await _service.GetAllPlansAsync();
+            var plans = await service.GetAllPlansAsync();
             return Ok(plans);
         }
 
@@ -88,8 +113,15 @@ namespace TravelService.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAsAdmin(int id)
         {
-            var ok = await _service.DeleteAsAdminAsync(id);
-            return ok ? NoContent() : NotFound();
+            var ok = await service.DeleteAsAdminAsync(id);
+            if (ok)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

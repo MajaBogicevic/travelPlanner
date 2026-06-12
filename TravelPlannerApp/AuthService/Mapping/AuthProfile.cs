@@ -1,5 +1,5 @@
 ﻿using AuthService.DTO.User;
-using AuthService.Models.TravelService.Models;
+using AuthService.Models;
 using AutoMapper;
 
 namespace AuthService.Mapping

@@ -42,12 +42,10 @@ namespace AuthService
                     {
                         var builder = WebApplication.CreateBuilder();
 
-                        var config = ctx.CodePackageActivationContext
-                            .GetConfigurationPackageObject("Config").Settings;
-                        var connStr = config.Sections["ConnectionStrings"]
-                            .Parameters["DefaultConnection"].Value;
-                        var jwtSecret = config.Sections["JwtSettings"]
-                            .Parameters["Secret"].Value;
+                        var config = ctx.CodePackageActivationContext.GetConfigurationPackageObject("Config").Settings;
+                        var connStr = config.Sections["ConnectionStrings"].Parameters["DefaultConnection"].Value;
+                        var jwtSecret = config.Sections["JwtSettings"].Parameters["Secret"].Value;
+                        var frontendUrl = config.Sections["FrontendSettings"].Parameters["BaseUrl"].Value;
 
                         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
                         {
@@ -55,27 +53,24 @@ namespace AuthService
                             ["ConnectionStrings:DefaultConnection"] = connStr
                         });
 
-                        builder.Services.AddDbContext<AuthDbContext>(o =>
-                            o.UseSqlServer(connStr));
+                        builder.Services.AddDbContext<AuthDbContext>(o => o.UseSqlServer(connStr));
                         builder.Services.AddScoped<IAuthService, AuthServiceImpl>();
                         builder.Services.AddAutoMapper(typeof(AuthProfile));
                         builder.Services.AddControllers();
-                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                            .AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
-                            {
-                                ValidateIssuerSigningKey = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(
-                                    Encoding.UTF8.GetBytes(jwtSecret)),
-                                ValidateIssuer = true,
-                                ValidIssuer = "TravelPlannerAPI",
-                                ValidateAudience = true,
-                                ValidAudience = "TravelPlannerClient",
-                                ValidateLifetime = true,
-                                ClockSkew = TimeSpan.Zero
-                            });
+                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                            ValidateIssuer = true,
+                            ValidIssuer = "TravelPlannerAPI",
+                            ValidateAudience = true,
+                            ValidAudience = "TravelPlannerClient",
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.Zero
+                        });
                         builder.Services.AddAuthorization();
                         builder.Services.AddCors(o => o.AddPolicy("AllowFrontend",
-                            p => p.WithOrigins("http://localhost:5173")
+                            p => p.WithOrigins(frontendUrl!)
                                    .AllowAnyHeader()
                                    .AllowAnyMethod()
                                    .AllowCredentials()));
@@ -88,6 +83,7 @@ namespace AuthService
                         app.UseAuthorization();
                         app.MapControllers();
                         return app;
+
                     }))
             };
     }

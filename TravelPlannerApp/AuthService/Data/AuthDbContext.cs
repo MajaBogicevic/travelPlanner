@@ -1,5 +1,4 @@
 ﻿using AuthService.Models;
-using AuthService.Models.TravelService.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 

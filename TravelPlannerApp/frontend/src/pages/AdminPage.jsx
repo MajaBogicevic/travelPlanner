@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import adminService from '../services/adminService';
+import { toast } from '../utils/toast';
 
 export default function AdminPage() {
     const navigate = useNavigate();
@@ -39,7 +40,10 @@ export default function AdminPage() {
         try {
             await adminService.updateRole(id, role);
             setUsers(prev => prev.map(u => u.id === id ? { ...u, role } : u));
-        } catch { alert('Greska pri promeni uloge.'); }
+            toast.success('Uloga je uspešno promenjena');
+        } catch {
+            toast.error('Greska pri promeni uloge.');
+        }
         finally { setSavingId(null); }
     };
 
@@ -50,7 +54,10 @@ export default function AdminPage() {
         try {
             await adminService.deleteUser(id);
             setUsers(prev => prev.filter(u => u.id !== id));
-        } catch { alert('Greska pri brisanju korisnika.'); }
+            toast.success('Korisnik je uspešno obrisan');
+        } catch {
+            toast.error('Greska pri brisanju korisnika.');
+        }
         finally { setDeletingId(null); }
     };
 
@@ -60,7 +67,10 @@ export default function AdminPage() {
         try {
             await adminService.deletePlan(id);
             setPlans(prev => prev.filter(p => p.id !== id));
-        } catch { alert('Greska pri brisanju plana.'); }
+            toast.success('Plan je uspešno obrisan');
+        } catch {
+            toast.error('Greska pri brisanju plana.');
+        }
         finally { setDeletingPlanId(null); }
     };
 

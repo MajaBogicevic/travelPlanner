@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import travelPlanService from '../services/travelPlanService';
 import logoIcon from '../assets/logoTravelApp.png';
+import bgImage from '../assets/beg.jpg';
 
 export default function LoginPage() {
     const { login } = useAuth();
@@ -29,7 +30,7 @@ export default function LoginPage() {
         try {
             await login(form.email, form.password);
             if (shareToken) {
-                try { await travelPlanService.acceptShareToken(shareToken); } catch { }
+                try { await travelPlanService.acceptShareToken(shareToken); } catch { /* empty */ }
             }
             navigate('/');
         } catch (err) {
@@ -86,7 +87,6 @@ export default function LoginPage() {
     );
 }
 
-const HERO_IMG = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80';
 
 const s = {
     root: { display: 'flex', minHeight: '100svh', background: 'var(--bg)' },
@@ -106,6 +106,6 @@ const s = {
     submitBtn: { marginTop: '4px', width: '100%', padding: '14px', background: 'var(--green-dark)', border: '1px solid var(--green)', color: 'var(--green-pale)', borderRadius: 'var(--radius-sm)', fontSize: '15px', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--sans)' },
     registerLink: { textAlign: 'center', marginTop: '28px', fontSize: '14px', color: 'var(--text)' },
     link: { color: 'var(--green-light)', fontWeight: 500 },
-    hero: { flex: '1 1 0', position: 'relative', backgroundImage: `url(${HERO_IMG})`, backgroundSize: 'cover', backgroundPosition: 'center' },
+    hero: { flex: '1 1 0', position: 'relative', backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' },
     heroOverlay: { position: 'absolute', inset: 0, background: 'linear-gradient(160deg,rgba(8,22,13,0.4) 0%,rgba(8,22,13,0.1) 50%,rgba(8,22,13,0.4) 100%)' },
 };

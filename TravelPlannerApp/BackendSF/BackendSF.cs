@@ -14,9 +14,7 @@ namespace BackendSF
     /// </summary>
     internal sealed class BackendSF : StatelessService
     {
-        public BackendSF(StatelessServiceContext context)
-            : base(context)
-        { }
+        public BackendSF(StatelessServiceContext context): base(context){ }
 
         /// <summary>
         /// Optional override to create listeners (like tcp, http) for this service instance.
@@ -30,18 +28,16 @@ namespace BackendSF
                     {
                         var builder = WebApplication.CreateBuilder();
 
-                        var config = ctx.CodePackageActivationContext
-                            .GetConfigurationPackageObject("Config").Settings;
-                        var jwtSecret = config.Sections["JwtSettings"]
-                            .Parameters["Secret"].Value;
+                        var config = ctx.CodePackageActivationContext.GetConfigurationPackageObject("Config").Settings;
+                        var jwtSecret = config.Sections["JwtSettings"].Parameters["Secret"].Value;
+                        var frontendUrl = config.Sections["FrontendSettings"].Parameters["BaseUrl"].Value;
 
                         builder.Services.AddControllers();
-                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                            .AddJwtBearer(o => o.TokenValidationParameters = new TokenValidationParameters
+                        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o => o.TokenValidationParameters = 
+                        new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(
-                                    Encoding.UTF8.GetBytes(jwtSecret)),
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
                                 ValidateIssuer = true,
                                 ValidIssuer = "TravelPlannerAPI",
                                 ValidateAudience = true,
@@ -51,7 +47,7 @@ namespace BackendSF
                             });
                         builder.Services.AddAuthorization();
                         builder.Services.AddCors(o => o.AddPolicy("AllowFrontend",
-                            p => p.WithOrigins("http://localhost:5173")
+                            p => p.WithOrigins(frontendUrl!)
                                    .AllowAnyHeader()
                                    .AllowAnyMethod()
                                    .AllowCredentials()));

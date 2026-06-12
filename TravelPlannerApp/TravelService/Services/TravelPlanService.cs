@@ -12,22 +12,22 @@ namespace TravelService.Services
 {
     public class TravelPlanService : ITravelPlanService
     {
-        private readonly TravelDbContext _db;
-        private readonly IMapper _mapper;
-        private readonly INotificationService _notificationService;
+        private readonly TravelDbContext db;
+        private readonly IMapper mapper;
+        private readonly INotificationService notificationService;
 
         public TravelPlanService(TravelDbContext db, IMapper mapper)
         {
-            _db = db;
-            _mapper = mapper;
-            _notificationService = ServiceProxy.Create<INotificationService>(
+            this.db = db;
+            this.mapper = mapper;
+            this.notificationService = ServiceProxy.Create<INotificationService>(
                 new Uri("fabric:/TravelPlannerApp/NotificationService"),
                 new ServicePartitionKey(0));
         }
 
         public async Task<List<TravelPlanResponseDto>> GetAllByUserAsync(int userId)
         {
-            var plans = await _db.TravelPlans
+            var plans = await db.TravelPlans
                 .Include(p => p.Destinations)
                 .Include(p => p.Activities)
                 .Include(p => p.Expenses)
@@ -35,29 +35,28 @@ namespace TravelService.Services
                 .Where(p => p.UserId == userId)
                 .ToListAsync();
 
-            return _mapper.Map<List<TravelPlanResponseDto>>(plans);
+            return mapper.Map<List<TravelPlanResponseDto>>(plans);
         }
 
         public async Task<TravelPlanResponseDto?> GetByIdAsync(int id, int userId)
         {
-            var plan = await _db.TravelPlans
+            var plan = await db.TravelPlans
                 .Include(p => p.Destinations)
                 .Include(p => p.Activities)
                 .Include(p => p.Expenses)
                 .Include(p => p.ChecklistItems)
-                .FirstOrDefaultAsync(p => p.Id == id &&
-                    (p.UserId == userId || _db.PlanAccesses.Any(a => a.TravelPlanId == id && a.UserId == userId)));
-            return plan == null ? null : _mapper.Map<TravelPlanResponseDto>(plan);
+                .FirstOrDefaultAsync(p => p.Id == id && (p.UserId == userId || db.PlanAccesses.Any(a => a.TravelPlanId == id && a.UserId == userId)));
+            return plan == null ? null : mapper.Map<TravelPlanResponseDto>(plan);
         }
 
         public async Task<TravelPlanResponseDto> CreateAsync(CreateTravelPlanDto dto, int userId)
         {
-            var plan = _mapper.Map<TravelPlan>(dto);
+            var plan = mapper.Map<TravelPlan>(dto);
             plan.UserId = userId;
-            _db.TravelPlans.Add(plan);
-            await _db.SaveChangesAsync();
+            db.TravelPlans.Add(plan);
+            await db.SaveChangesAsync();
 
-            await _notificationService.PublishAsync(new TravelPlanEvent
+            await notificationService.PublishAsync(new TravelPlanEvent
             {
                 EventType = "PLAN_CREATED",
                 UserId = userId,
@@ -65,20 +64,20 @@ namespace TravelService.Services
                 Timestamp = DateTime.UtcNow
             });
 
-            return _mapper.Map<TravelPlanResponseDto>(plan);
+            return mapper.Map<TravelPlanResponseDto>(plan);
         }
 
         public async Task<TravelPlanResponseDto?> UpdateAsync(int id, UpdateTravelPlanDto dto, int userId)
         {
-            var plan = await _db.TravelPlans
-                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+            var plan = await db.TravelPlans.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
 
-            if (plan == null) return null;
+            if (plan == null) 
+                return null;
 
-            _mapper.Map(dto, plan);
-            await _db.SaveChangesAsync();
+            mapper.Map(dto, plan);
+            await db.SaveChangesAsync();
 
-            await _notificationService.PublishAsync(new TravelPlanEvent
+            await notificationService.PublishAsync(new TravelPlanEvent
             {
                 EventType = "PLAN_UPDATED",
                 UserId = userId,
@@ -86,20 +85,20 @@ namespace TravelService.Services
                 Timestamp = DateTime.UtcNow
             });
 
-            return _mapper.Map<TravelPlanResponseDto>(plan);
+            return mapper.Map<TravelPlanResponseDto>(plan);
         }
 
         public async Task<bool> DeleteAsync(int id, int userId)
         {
-            var plan = await _db.TravelPlans
-                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+            var plan = await db.TravelPlans.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
 
-            if (plan == null) return false;
+            if (plan == null) 
+                return false;
 
-            _db.TravelPlans.Remove(plan);
-            await _db.SaveChangesAsync();
+            db.TravelPlans.Remove(plan);
+            await db.SaveChangesAsync();
 
-            await _notificationService.PublishAsync(new TravelPlanEvent
+            await notificationService.PublishAsync(new TravelPlanEvent
             {
                 EventType = "PLAN_DELETED",
                 UserId = userId,
@@ -112,12 +111,12 @@ namespace TravelService.Services
 
         public async Task<List<TravelPlanResponseDto>> GetSharedPlanIdsAsync(int userId)
         {
-            var sharedPlanIds = await _db.PlanAccesses
+            var sharedPlanIds = await db.PlanAccesses
                 .Where(a => a.UserId == userId)
                 .Select(a => a.TravelPlanId)
                 .ToListAsync();
 
-            var plans = await _db.TravelPlans
+            var plans = await db.TravelPlans
                 .Include(p => p.Destinations)
                 .Include(p => p.Activities)
                 .Include(p => p.Expenses)
@@ -125,29 +124,30 @@ namespace TravelService.Services
                 .Where(p => sharedPlanIds.Contains(p.Id))
                 .ToListAsync();
 
-            return _mapper.Map<List<TravelPlanResponseDto>>(plans);
+            return mapper.Map<List<TravelPlanResponseDto>>(plans);
         }
 
         public async Task<List<TravelPlanResponseDto>> GetAllPlansAsync()
         {
-            var plans = await _db.TravelPlans
+            var plans = await db.TravelPlans
                 .Include(p => p.Destinations)
                 .Include(p => p.Activities)
                 .Include(p => p.Expenses)
                 .Include(p => p.ChecklistItems)
                 .ToListAsync();
-            return _mapper.Map<List<TravelPlanResponseDto>>(plans);
+            return mapper.Map<List<TravelPlanResponseDto>>(plans);
         }
 
         public async Task<bool> DeleteAsAdminAsync(int id)
         {
-            var plan = await _db.TravelPlans.FirstOrDefaultAsync(p => p.Id == id);
-            if (plan == null) return false;
+            var plan = await db.TravelPlans.FirstOrDefaultAsync(p => p.Id == id);
+            if (plan == null) 
+                return false;
 
-            _db.TravelPlans.Remove(plan);
-            await _db.SaveChangesAsync();
+            db.TravelPlans.Remove(plan);
+            await db.SaveChangesAsync();
 
-            await _notificationService.PublishAsync(new TravelPlanEvent
+            await notificationService.PublishAsync(new TravelPlanEvent
             {
                 EventType = "PLAN_DELETED_BY_ADMIN",
                 UserId = plan.UserId,

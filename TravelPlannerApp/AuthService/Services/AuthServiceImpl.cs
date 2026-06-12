@@ -1,7 +1,7 @@
 ﻿using AuthService.Data;
 using AuthService.DTO.Auth;
 using AuthService.DTO.User;
-using AuthService.Models.TravelService.Models;
+using AuthService.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,45 +13,54 @@ namespace AuthService.Services
 {
     public class AuthServiceImpl : IAuthService
     {
-        private readonly AuthDbContext _db;
-        private readonly IMapper _mapper;
-        private readonly IConfiguration _config;
+        private readonly AuthDbContext db;
+        private readonly IMapper mapper;
+        private readonly IConfiguration config;
 
         public AuthServiceImpl(AuthDbContext db, IMapper mapper, IConfiguration config)
         {
-            _db = db;
-            _mapper = mapper;
-            _config = config;
+            this.db = db;
+            this.mapper = mapper;
+            this.config = config;
         }
 
         public async Task<AuthResultDto> RegisterAsync(RegisterDto dto)
         {
-            if (await _db.Users.AnyAsync(u => u.Email == dto.Email))
-                return new AuthResultDto { Success = false, Message = "Email već postoji" };
+            bool emailExists = await db.Users.AnyAsync(u => u.Email == dto.Email);
 
-            var user = new User
+            if (emailExists)
             {
-                Name = dto.Name,
-                Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = UserRole.User
-            };
+                var errorResult = new AuthResultDto();
+                errorResult.Success = false;
+                errorResult.Message = "Email već postoji";
+                return errorResult;
+            }
 
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            return new AuthResultDto
-            {
-                Success = true,
-                Token = GenerateJwtToken(user),
-                UserId = user.Id,
-                Role = user.Role.ToString()
-            };
+            var newUser = new User();
+            newUser.Name = dto.Name;
+            newUser.Email = dto.Email;
+            newUser.PasswordHash = hashedPassword;
+            newUser.Role = UserRole.User;
+
+            db.Users.Add(newUser);
+            await db.SaveChangesAsync();
+
+            string token = GenerateJwtToken(newUser);
+
+            var result = new AuthResultDto();
+            result.Success = true;
+            result.Token = token;
+            result.UserId = newUser.Id;
+            result.Role = newUser.Role.ToString();
+
+            return result;
         }
 
         public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return new AuthResultDto { Success = false, Message = "Pogrešni podaci" };
@@ -67,13 +76,20 @@ namespace AuthService.Services
 
         public async Task<UserResponseDto?> GetUserByIdAsync(int id)
         {
-            var user = await _db.Users.FindAsync(id);
-            return user == null ? null : _mapper.Map<UserResponseDto>(user);
+            var user = await db.Users.FindAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+            else
+            {
+                return mapper.Map<UserResponseDto>(user);
+            }
         }
 
         private string GenerateJwtToken(User user)
         {
-            var secret = _config["JwtSettings:Secret"]!;
+            var secret = config["JwtSettings:Secret"]!;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
