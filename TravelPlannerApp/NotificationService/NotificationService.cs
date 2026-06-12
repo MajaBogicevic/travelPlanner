@@ -43,17 +43,20 @@ namespace NotificationService
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                using var tx = StateManager.CreateTransaction();
-                var result = await queue.TryDequeueAsync(tx, TimeSpan.FromSeconds(5), cancellationToken);
-                if (result.HasValue)
+                bool processed = false;
+                using (var tx = StateManager.CreateTransaction())
                 {
-                    await ProcessEventAsync(result.Value);
-                    await tx.CommitAsync();
+                    var result = await queue.TryDequeueAsync(tx, TimeSpan.FromMilliseconds(500), cancellationToken);
+                    if (result.HasValue)
+                    {
+                        await ProcessEventAsync(result.Value);
+                        await tx.CommitAsync();
+                        processed = true;
+                    }
                 }
-                else
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-                }
+
+                if (!processed)
+                    await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
             }
         }
 

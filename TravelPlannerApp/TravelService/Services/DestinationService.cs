@@ -21,6 +21,12 @@ namespace TravelService.Services
                 || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId);
         }
 
+        private async Task<bool> HasEditAccessAsync(int planId, int userId)
+        {
+            return await _db.TravelPlans.AnyAsync(p => p.Id == planId && p.UserId == userId)
+                || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId && a.AccessType == ShareAccessType.Edit);
+        }
+
         public async Task<List<DestinationResponseDto>> GetAllAsync(int planId, int userId)
         {
             if (!await HasAccessAsync(planId, userId)) return new List<DestinationResponseDto>();
@@ -40,7 +46,7 @@ namespace TravelService.Services
 
         public async Task<DestinationResponseDto> CreateAsync(int planId, CreateDestinationDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
+            if (!await HasEditAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
             var destination = _mapper.Map<Destination>(dto);
             destination.TravelPlanId = planId;
             _db.Destinations.Add(destination);
@@ -50,7 +56,7 @@ namespace TravelService.Services
 
         public async Task<DestinationResponseDto?> UpdateAsync(int id, int planId, UpdateDestinationDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return null;
+            if (!await HasEditAccessAsync(planId, userId)) return null;
             var destination = await _db.Destinations
                 .FirstOrDefaultAsync(d => d.Id == id && d.TravelPlanId == planId);
             if (destination == null) return null;
@@ -61,7 +67,7 @@ namespace TravelService.Services
 
         public async Task<bool> DeleteAsync(int id, int planId, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return false;
+            if (!await HasEditAccessAsync(planId, userId)) return false;
             var destination = await _db.Destinations
                 .FirstOrDefaultAsync(d => d.Id == id && d.TravelPlanId == planId);
             if (destination == null) return false;

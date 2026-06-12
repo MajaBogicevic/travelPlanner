@@ -7,5 +7,6 @@
         public TravelPlan TravelPlan { get; set; } = null!;
         public int UserId { get; set; }
         public DateTime GrantedAt { get; set; } = DateTime.UtcNow;
+        public ShareAccessType AccessType { get; set; } = ShareAccessType.View;
     }
 }

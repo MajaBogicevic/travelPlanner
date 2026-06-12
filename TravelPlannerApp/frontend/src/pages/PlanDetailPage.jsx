@@ -90,9 +90,6 @@ export default function PlanDetailPage() {
                                 {plan.remainingBudget?.toFixed(2)} €
                             </span>
                         </div>
-                        <button style={s.shareBtn} onClick={() => navigate(`/plans/${id}/share`)}>
-                            Podeli plan
-                        </button>
                     </div>
                 </div>
 

@@ -11,5 +11,6 @@ namespace TravelService.Services
         Task<bool> DeleteAsync(int id, int userId);
         Task<List<TravelPlanResponseDto>> GetSharedPlanIdsAsync(int userId);
         Task<List<TravelPlanResponseDto>> GetAllPlansAsync();
+        Task<bool> DeleteAsAdminAsync(int id);
     }
 }

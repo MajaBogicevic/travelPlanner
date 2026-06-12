@@ -71,15 +71,25 @@ namespace TravelService.Services
                 .FirstOrDefaultAsync(s => s.Token == token && s.ExpiresAt > DateTime.UtcNow);
             if (shared == null) return false;
 
-            var alreadyExists = await _db.PlanAccesses
-                .AnyAsync(a => a.TravelPlanId == shared.TravelPlanId && a.UserId == userId);
-            if (alreadyExists) return true;
+            var existing = await _db.PlanAccesses
+                .FirstOrDefaultAsync(a => a.TravelPlanId == shared.TravelPlanId && a.UserId == userId);
+
+            if (existing != null)
+            {
+                if (shared.AccessType == ShareAccessType.Edit && existing.AccessType != ShareAccessType.Edit)
+                {
+                    existing.AccessType = ShareAccessType.Edit;
+                    await _db.SaveChangesAsync();
+                }
+                return true;
+            }
 
             _db.PlanAccesses.Add(new Models.PlanAccess
             {
                 TravelPlanId = shared.TravelPlanId,
                 UserId = userId,
-                GrantedAt = DateTime.UtcNow
+                GrantedAt = DateTime.UtcNow,
+                AccessType = shared.AccessType
             });
             await _db.SaveChangesAsync();
             return true;

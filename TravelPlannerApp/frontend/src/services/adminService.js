@@ -5,6 +5,7 @@ const adminService = {
     updateRole: (id, role) => api.put(`/admin/users/${id}/role`, { role }),
     deleteUser: (id) => api.delete(`/admin/users/${id}`),
     getAllPlans: () => travelApi.get('/travel-plans/admin/all').then(r => r.data),
+    deletePlan: (id) => travelApi.delete(`/travel-plans/admin/${id}`),
 };
 
 export default adminService;

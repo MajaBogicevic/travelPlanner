@@ -17,6 +17,9 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="ApplicationPackageRoot\ApplicationManifest.xml" />

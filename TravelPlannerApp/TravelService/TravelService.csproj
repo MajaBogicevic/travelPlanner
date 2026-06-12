@@ -21,6 +21,8 @@
 	<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 	<PackageReference Include="Microsoft.VisualStudio.Azure.Fabric.MSBuild" Version="1.7.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	<PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="9.0.474-beta" />
+	<ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

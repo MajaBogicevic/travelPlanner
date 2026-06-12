@@ -130,6 +130,15 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
         } catch { alert('Greska pri brisanju'); }
     };
 
+    const groupByDate = (acts) => {
+        return acts.reduce((groups, act) => {
+            const dateKey = act.date?.split('T')[0] || 'no-date';
+            if (!groups[dateKey]) groups[dateKey] = [];
+            groups[dateKey].push(act);
+            return groups;
+        }, {});
+    };
+
     const renderCalendar = () => {
         const year = calendarMonth.getFullYear();
         const month = calendarMonth.getMonth();
@@ -276,45 +285,53 @@ export default function ActivitiesTab({ planId, onRefresh, plan }) {
                     {activities.length === 0 && !showForm && (
                         <div style={styles.empty}><p>Nema aktivnosti. Dodajte prvu aktivnost.</p></div>
                     )}
-                    <div style={styles.list}>
-                        {activities.map(act => {
-                            const s = STATUS_LABELS[act.status] || STATUS_LABELS.Planned;
-                            return (
-                                <div key={act.id} style={styles.card}>
-                                    <div style={styles.cardLeft}>
-                                        <div style={{ ...styles.statusDot, backgroundColor: s.color }} />
-                                        <div>
-                                            <div style={styles.actName}>{act.name}</div>
-                                            <div style={styles.actMeta}>
-                                                {new Date(act.date).toLocaleDateString('sr-RS')}
-                                                {act.time && <span> • {act.time}</span>}
-                                                {act.location && <span> • {act.location}</span>}
-                                                {act.estimatedCost != null && <span> • {act.estimatedCost} EUR</span>}
+                    {Object.entries(groupByDate(activities)).map(([dateKey, acts]) => (
+                        <div key={dateKey} style={{ marginBottom: '20px' }}>
+                            <div style={styles.dayHeader}>
+                                {dateKey !== 'no-date'
+                                    ? new Date(dateKey).toLocaleDateString('sr-Latn-RS', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+                                    : 'Bez datuma'}
+                            </div>
+                            <div style={styles.list}>
+                                {acts.map(act => {
+                                    const s = STATUS_LABELS[act.status] || STATUS_LABELS.Planned;
+                                    return (
+                                        <div key={act.id} style={styles.card}>
+                                            <div style={styles.cardLeft}>
+                                                <div style={{ ...styles.statusDot, backgroundColor: s.color }} />
+                                                <div>
+                                                    <div style={styles.actName}>{act.name}</div>
+                                                    <div style={styles.actMeta}>
+                                                        {act.time && <span>{act.time}</span>}
+                                                        {act.location && <span> • {act.location}</span>}
+                                                        {act.estimatedCost != null && <span> • {act.estimatedCost} EUR</span>}
+                                                    </div>
+                                                    {act.description && <p style={styles.actDesc}>{act.description}</p>}
+                                                </div>
                                             </div>
-                                            {act.description && <p style={styles.actDesc}>{act.description}</p>}
+                                            <div style={styles.cardRight}>
+                                                <span style={{
+                                                    padding: '2px 8px', borderRadius: '99px', fontSize: '11px',
+                                                    fontWeight: '500', color: s.color, background: s.bg,
+                                                    border: `1px solid ${s.border}`,
+                                                }}>
+                                                    {s.label}
+                                                </span>
+                                                <div style={styles.cardActions}>
+                                                    <button style={styles.editBtn} onClick={() => openEdit(act)}>
+                                                        <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                    </button>
+                                                    <button style={styles.deleteBtn} onClick={() => handleDelete(act.id)}>
+                                                        <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div style={styles.cardRight}>
-                                        <span style={{
-                                            padding: '2px 8px', borderRadius: '99px', fontSize: '11px',
-                                            fontWeight: '500', color: s.color, background: s.bg,
-                                            border: `1px solid ${s.border}`,
-                                        }}>
-                                            {s.label}
-                                        </span>
-                                        <div style={styles.cardActions}>
-                                            <button style={styles.editBtn} onClick={() => openEdit(act)}>
-                                                <img src={editIcon} alt="Izmeni" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
-                                            </button>
-                                            <button style={styles.deleteBtn} onClick={() => handleDelete(act.id)}>
-                                                <img src={deleteIcon} alt="Izbrisi" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
                 </>
             )}
         </div>
@@ -356,6 +373,8 @@ const styles = {
     cardActions: { display: 'flex', gap: '6px' },
     editBtn: { padding: '5px 12px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-2)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px' },
     deleteBtn: { padding: '5px 10px', background: 'var(--red-bg)', border: '1px solid rgba(224,92,92,0.3)', color: 'var(--red)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--sans)', marginTop: '10px' },
+    dayHeader: {fontSize: '13px', fontWeight: '600', color: 'var(--text-2)',textTransform: 'capitalize', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid var(--border)',
+    },
 };
 
 const calStyles = {

@@ -5,7 +5,7 @@ import deleteIcon from '../../assets/delete.png';
 
 const CATEGORIES = ['Transport', 'Accommodation', 'Food', 'Tickets', 'Shopping', 'Other'];
 const CATEGORY_ICONS = { Transport: '', Accommodation: '', Food: '', Tickets: '', Shopping: '', Other: '' };
-const CATEGORY_LABELS = { Transport: 'Transport', Accommodation: 'Smještaj', Food: 'Hrana', Tickets: 'Ulaznice', Shopping: 'Shopping', Other: 'Ostalo' };
+const CATEGORY_LABELS = { Transport: 'Transport', Accommodation: 'Smeštaj', Food: 'Hrana', Tickets: 'Ulaznice', Shopping: 'Kupovina', Other: 'Ostalo' };
 
 const emptyForm = { name: '', category: 'Transport', amount: '', date: '', description: '' };
 
@@ -107,7 +107,7 @@ export default function ExpensesTab({ planId, budget, onRefresh, plan }) {
                     <div style={{ ...styles.progressFill, width: `${pct}%`, backgroundColor: over ? '#d32f2f' : pct > 75 ? '#FF9800' : '#388e3c' }} />
                 </div>
                 <div style={styles.pctLabel}>{pct.toFixed(0)}% iskorišteno</div>
-                {over && <div style={styles.overWarning}>⚠️ Prekoračili ste budžet za {Math.abs(remaining).toFixed(2)} €</div>}
+                {over && <div style={styles.overWarning}>Prekoračili ste budžet za {Math.abs(remaining).toFixed(2)} €</div>}
                 <div style={styles.catBreakdown}>
                     {CATEGORIES.filter(c => byCat[c] > 0).map(c => (
                         <div key={c} style={styles.catItem}>

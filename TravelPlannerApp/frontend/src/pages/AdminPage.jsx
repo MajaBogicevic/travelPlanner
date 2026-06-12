@@ -15,6 +15,7 @@ export default function AdminPage() {
     const [deletingId, setDeletingId] = useState(null);
     const [search, setSearch] = useState('');
     const [userFilter, setUserFilter] = useState(null);
+    const [deletingPlanId, setDeletingPlanId] = useState(null);
 
     useEffect(() => {
         Promise.all([
@@ -51,6 +52,16 @@ export default function AdminPage() {
             setUsers(prev => prev.filter(u => u.id !== id));
         } catch { alert('Greska pri brisanju korisnika.'); }
         finally { setDeletingId(null); }
+    };
+
+    const deletePlan = async (id, name) => {
+        if (!window.confirm(`Obrisati plan "${name}"?`)) return;
+        setDeletingPlanId(id);
+        try {
+            await adminService.deletePlan(id);
+            setPlans(prev => prev.filter(p => p.id !== id));
+        } catch { alert('Greska pri brisanju plana.'); }
+        finally { setDeletingPlanId(null); }
     };
 
     const viewUserPlans = (userId) => {
@@ -197,6 +208,7 @@ export default function AdminPage() {
                                             <th style={s.th}>Budzet</th>
                                             <th style={s.th}>Destinacije</th>
                                             <th style={s.th}>Aktivnosti</th>
+                                            <th style={s.th}>Akcije</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -215,6 +227,15 @@ export default function AdminPage() {
                                                     <td style={{ ...s.td, fontWeight: '600', color: 'var(--green-light)' }}>{p.budget?.toFixed(0)} €</td>
                                                     <td style={{ ...s.td, color: 'var(--green-mid)' }}>{p.destinations?.length || 0}</td>
                                                     <td style={{ ...s.td, color: 'var(--text-2)' }}>{p.activities?.length || 0}</td>
+                                                    <td style={s.td}>
+                                                        <button
+                                                            style={s.deleteBtn}
+                                                            onClick={(e) => { e.stopPropagation(); deletePlan(p.id, p.name); }}
+                                                            disabled={deletingPlanId === p.id}
+                                                        >
+                                                            {deletingPlanId === p.id ? '...' : 'Obrisi'}
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             );
                                         })}

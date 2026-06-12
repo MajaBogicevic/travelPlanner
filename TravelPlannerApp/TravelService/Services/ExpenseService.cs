@@ -21,6 +21,12 @@ namespace TravelService.Services
                 || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId);
         }
 
+        private async Task<bool> HasEditAccessAsync(int planId, int userId)
+        {
+            return await _db.TravelPlans.AnyAsync(p => p.Id == planId && p.UserId == userId)
+                || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId && a.AccessType == ShareAccessType.Edit);
+        }
+
         public async Task<List<ExpenseResponseDto>> GetAllAsync(int planId, int userId)
         {
             if (!await HasAccessAsync(planId, userId)) return new List<ExpenseResponseDto>();
@@ -32,7 +38,7 @@ namespace TravelService.Services
 
         public async Task<ExpenseResponseDto> CreateAsync(int planId, CreateExpenseDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
+            if (!await HasEditAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
             var expense = _mapper.Map<Expense>(dto);
             expense.TravelPlanId = planId;
             _db.Expenses.Add(expense);
@@ -42,7 +48,7 @@ namespace TravelService.Services
 
         public async Task<ExpenseResponseDto?> UpdateAsync(int id, int planId, UpdateExpenseDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return null;
+            if (!await HasEditAccessAsync(planId, userId)) return null;
             var expense = await _db.Expenses
                 .FirstOrDefaultAsync(e => e.Id == id && e.TravelPlanId == planId);
             if (expense == null) return null;
@@ -53,7 +59,7 @@ namespace TravelService.Services
 
         public async Task<bool> DeleteAsync(int id, int planId, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return false;
+            if (!await HasEditAccessAsync(planId, userId)) return false;
             var expense = await _db.Expenses
                 .FirstOrDefaultAsync(e => e.Id == id && e.TravelPlanId == planId);
             if (expense == null) return false;

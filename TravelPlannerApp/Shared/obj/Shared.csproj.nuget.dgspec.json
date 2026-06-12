@@ -52,7 +52,7 @@
           "dependencies": {
             "Microsoft.ServiceFabric.Services.Remoting": {
               "target": "Package",
-              "version": "[9.0.474-beta, )"
+              "version": "[8.0.1816-beta, )"
             },
             "Microsoft.VisualStudio.Azure.Fabric.MSBuild": {
               "target": "Package",

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using Microsoft.ServiceFabric.Services.Client;
+using Shared.Events;
+using Shared.Interface;
 using TravelService.Data;
 using TravelService.DTO.TravelPlan;
 using TravelService.Models;
@@ -10,11 +14,15 @@ namespace TravelService.Services
     {
         private readonly TravelDbContext _db;
         private readonly IMapper _mapper;
+        private readonly INotificationService _notificationService;
 
         public TravelPlanService(TravelDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
+            _notificationService = ServiceProxy.Create<INotificationService>(
+                new Uri("fabric:/TravelPlannerApp/NotificationService"),
+                new ServicePartitionKey(0));
         }
 
         public async Task<List<TravelPlanResponseDto>> GetAllByUserAsync(int userId)
@@ -46,9 +54,16 @@ namespace TravelService.Services
         {
             var plan = _mapper.Map<TravelPlan>(dto);
             plan.UserId = userId;
-
             _db.TravelPlans.Add(plan);
             await _db.SaveChangesAsync();
+
+            await _notificationService.PublishAsync(new TravelPlanEvent
+            {
+                EventType = "PLAN_CREATED",
+                UserId = userId,
+                PlanName = plan.Name,
+                Timestamp = DateTime.UtcNow
+            });
 
             return _mapper.Map<TravelPlanResponseDto>(plan);
         }
@@ -63,6 +78,14 @@ namespace TravelService.Services
             _mapper.Map(dto, plan);
             await _db.SaveChangesAsync();
 
+            await _notificationService.PublishAsync(new TravelPlanEvent
+            {
+                EventType = "PLAN_UPDATED",
+                UserId = userId,
+                PlanName = plan.Name,
+                Timestamp = DateTime.UtcNow
+            });
+
             return _mapper.Map<TravelPlanResponseDto>(plan);
         }
 
@@ -75,6 +98,15 @@ namespace TravelService.Services
 
             _db.TravelPlans.Remove(plan);
             await _db.SaveChangesAsync();
+
+            await _notificationService.PublishAsync(new TravelPlanEvent
+            {
+                EventType = "PLAN_DELETED",
+                UserId = userId,
+                PlanName = plan.Name,
+                Timestamp = DateTime.UtcNow
+            });
+
             return true;
         }
 
@@ -105,6 +137,25 @@ namespace TravelService.Services
                 .Include(p => p.ChecklistItems)
                 .ToListAsync();
             return _mapper.Map<List<TravelPlanResponseDto>>(plans);
+        }
+
+        public async Task<bool> DeleteAsAdminAsync(int id)
+        {
+            var plan = await _db.TravelPlans.FirstOrDefaultAsync(p => p.Id == id);
+            if (plan == null) return false;
+
+            _db.TravelPlans.Remove(plan);
+            await _db.SaveChangesAsync();
+
+            await _notificationService.PublishAsync(new TravelPlanEvent
+            {
+                EventType = "PLAN_DELETED_BY_ADMIN",
+                UserId = plan.UserId,
+                PlanName = plan.Name,
+                Timestamp = DateTime.UtcNow
+            });
+
+            return true;
         }
     }
 }

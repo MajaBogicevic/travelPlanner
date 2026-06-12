@@ -13,7 +13,9 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.0",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.0",
           "Microsoft.ServiceFabric.AspNetCore.Kestrel": "9.0.474-beta",
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta",
           "Microsoft.VisualStudio.Azure.Fabric.MSBuild": "1.7.9",
+          "Shared": "1.0.0",
           "Swashbuckle.AspNetCore": "6.6.2"
         },
         "runtime": {
@@ -580,6 +582,47 @@
           }
         }
       },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+        "dependencies": {
+          "Microsoft.ServiceFabric": "12.0.474-beta"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          },
+          "lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.McgInterop.dll": {
+            "rid": "linux",
+            "assetType": "runtime",
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.McgInterop.dll": {
+            "rid": "linux",
+            "assetType": "runtime",
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.V2.dll": {
+            "rid": "linux",
+            "assetType": "runtime",
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          },
+          "runtimes/linux/lib/net8.0/Microsoft.ServiceFabric.FabricTransport.dll": {
+            "rid": "linux",
+            "assetType": "runtime",
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.474.1"
+          }
+        }
+      },
       "Microsoft.ServiceFabric.Services/9.0.474-beta": {
         "dependencies": {
           "Microsoft.ServiceFabric.Data": "9.0.474-beta",
@@ -587,6 +630,19 @@
         },
         "runtime": {
           "lib/net8.0/Microsoft.ServiceFabric.Services.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "9.9.0.0"
+          }
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+        "dependencies": {
+          "Microsoft.ServiceFabric.Diagnostics.Internal": "9.0.474-beta",
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "9.0.474-beta",
+          "Microsoft.ServiceFabric.Services": "9.0.474-beta"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.ServiceFabric.Services.Remoting.dll": {
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "9.9.0.0"
           }
@@ -853,6 +909,18 @@
             "assetType": "runtime",
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "Shared/1.0.0": {
+        "dependencies": {
+          "Microsoft.ServiceFabric.Services.Remoting": "9.0.474-beta",
+          "Microsoft.VisualStudio.Azure.Fabric.MSBuild": "1.7.9"
+        },
+        "runtime": {
+          "Shared.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -1207,12 +1275,26 @@
       "path": "microsoft.servicefabric.diagnostics.internal/9.0.474-beta",
       "hashPath": "microsoft.servicefabric.diagnostics.internal.9.0.474-beta.nupkg.sha512"
     },
+    "Microsoft.ServiceFabric.FabricTransport.Internal/9.0.474-beta": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WiMMd7pd+c6eT8PfotlmD80ApAZZyIOfIe5SFJhy9WDSQ1+vNz8LgjBrFAoIlhbvzfO1yKCgYbEqWvkrUl5UIg==",
+      "path": "microsoft.servicefabric.fabrictransport.internal/9.0.474-beta",
+      "hashPath": "microsoft.servicefabric.fabrictransport.internal.9.0.474-beta.nupkg.sha512"
+    },
     "Microsoft.ServiceFabric.Services/9.0.474-beta": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-h6JNmWCindinTc9ojHMdydgP22UsPEhTD8OvhC0yGxPfuELX/ZeRZKEuNxW8mcu2sp8Pas8DGw5cQ9kVnhq6eg==",
       "path": "microsoft.servicefabric.services/9.0.474-beta",
       "hashPath": "microsoft.servicefabric.services.9.0.474-beta.nupkg.sha512"
+    },
+    "Microsoft.ServiceFabric.Services.Remoting/9.0.474-beta": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Hr0/IhCLDw8YrYJveP1zBCzsJh25AXVht7OOUf+9czVlIKp7UHixzsue4Ce7vfnHulZMlMzJnqDt4dtn4E/1GQ==",
+      "path": "microsoft.servicefabric.services.remoting/9.0.474-beta",
+      "hashPath": "microsoft.servicefabric.services.remoting.9.0.474-beta.nupkg.sha512"
     },
     "Microsoft.SqlServer.Server/1.0.0": {
       "type": "package",
@@ -1486,6 +1568,11 @@
       "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
+    },
+    "Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

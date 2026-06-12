@@ -21,6 +21,12 @@ namespace TravelService.Services
                 || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId);
         }
 
+        private async Task<bool> HasEditAccessAsync(int planId, int userId)
+        {
+            return await _db.TravelPlans.AnyAsync(p => p.Id == planId && p.UserId == userId)
+                || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId && a.AccessType == ShareAccessType.Edit);
+        }
+
         public async Task<List<ChecklistItemDto>> GetAllAsync(int planId, int userId)
         {
             if (!await HasAccessAsync(planId, userId)) return new List<ChecklistItemDto>();
@@ -32,7 +38,7 @@ namespace TravelService.Services
 
         public async Task<ChecklistItemDto> CreateAsync(int planId, CreateChecklistItemDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
+            if (!await HasEditAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
             var item = _mapper.Map<ChecklistItem>(dto);
             item.TravelPlanId = planId;
             _db.ChecklistItems.Add(item);
@@ -42,7 +48,7 @@ namespace TravelService.Services
 
         public async Task<ChecklistItemDto?> ToggleAsync(int id, int planId, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return null;
+            if (!await HasEditAccessAsync(planId, userId)) return null;
             var item = await _db.ChecklistItems
                 .FirstOrDefaultAsync(c => c.Id == id && c.TravelPlanId == planId);
             if (item == null) return null;
@@ -53,7 +59,7 @@ namespace TravelService.Services
 
         public async Task<bool> DeleteAsync(int id, int planId, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return false;
+            if (!await HasEditAccessAsync(planId, userId)) return false;
             var item = await _db.ChecklistItems
                 .FirstOrDefaultAsync(c => c.Id == id && c.TravelPlanId == planId);
             if (item == null) return false;

@@ -21,6 +21,12 @@ namespace TravelService.Services
                 || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId);
         }
 
+        private async Task<bool> HasEditAccessAsync(int planId, int userId)
+        {
+            return await _db.TravelPlans.AnyAsync(p => p.Id == planId && p.UserId == userId)
+                || await _db.PlanAccesses.AnyAsync(a => a.TravelPlanId == planId && a.UserId == userId && a.AccessType == ShareAccessType.Edit);
+        }
+
         public async Task<List<ActivityResponseDto>> GetAllAsync(int planId, int userId)
         {
             if (!await HasAccessAsync(planId, userId)) return new List<ActivityResponseDto>();
@@ -41,7 +47,7 @@ namespace TravelService.Services
 
         public async Task<ActivityResponseDto> CreateAsync(int planId, CreateActivityDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
+            if (!await HasEditAccessAsync(planId, userId)) throw new KeyNotFoundException("Plan nije pronadjen");
             var activity = _mapper.Map<Activity>(dto);
             activity.TravelPlanId = planId;
             _db.Activities.Add(activity);
@@ -51,7 +57,7 @@ namespace TravelService.Services
 
         public async Task<ActivityResponseDto?> UpdateAsync(int id, int planId, UpdateActivityDto dto, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return null;
+            if (!await HasEditAccessAsync(planId, userId)) return null;
             var activity = await _db.Activities
                 .FirstOrDefaultAsync(a => a.Id == id && a.TravelPlanId == planId);
             if (activity == null) return null;
@@ -62,7 +68,7 @@ namespace TravelService.Services
 
         public async Task<bool> DeleteAsync(int id, int planId, int userId)
         {
-            if (!await HasAccessAsync(planId, userId)) return false;
+            if (!await HasEditAccessAsync(planId, userId)) return false;
             var activity = await _db.Activities
                 .FirstOrDefaultAsync(a => a.Id == id && a.TravelPlanId == planId);
             if (activity == null) return false;
