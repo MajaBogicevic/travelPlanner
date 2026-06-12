@@ -1,6 +1,6 @@
 # Travel Planner App
 
-Web aplikacija za planiranje putovanja — omogućava korisnicima da kreiraju planove putovanja, upravljaju destinacijama, aktivnostima, budžetom i listom, i da dele planove sa drugima putem linka ili QR koda sa i bez mogućnostima izmene.
+Web aplikacija za planiranje putovanja, omogućava korisnicima da kreiraju planove putovanja, upravljaju destinacijama, aktivnostima, budžetom i listom, i da dele planove sa drugima putem linka ili QR koda sa i bez mogućnostima izmene.
 
 # Arhitektura sistema
 
